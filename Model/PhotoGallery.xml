@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<package name="PhotoGallery">
+
+	<enumeration name="AlbumPrivacy">
+		<value name="Private" />
+		<value name="MembersOnly" />
+		<value name="Everyone" />
+	</enumeration>
+
+	<entity name="Gallery" implements="FlagActivation" comment="Photo gallery. A gallery can contain an unlimited number of photo albums." >
+		<property name="Title"    type="text:128" constraint="required" />
+		<property name="Keywords" type="text:100" />
+	</entity>
+
+	<entity name="PhotoAlbum" implements="FlagActivation" comment="Photo album." >
+		<property name="Gallery"  type="Gallery" constraint="required" comment="Parent photo gallery." />
+		<property name="Date"     type="time" constraint="required" comment="Creation date." />
+		<property name="Access"   type="AlbumPrivacy" constraint="required" comment="Intended viewer audience." />
+		<property name="Keywords" type="text:100" />
+	</entity>
+
+	<entity name="Photo" implements="FlagActivation" comment="Photo." >
+		<property name="Album"       type="PhotoAlbum" constraint="required" comment="Parent album." />
+		<property name="Date"        type="time" constraint="required" comment="Creation date." />
+		<property name="Title"       type="text:100" comment="Short title." />
+		<property name="Description" type="text:1K" comment="Description." />
+		<property name="Keywords"    type="text:100" />
+	</entity>
+
+	<enumeration name="StandardOps" comment="Standard ACL operations" >
+		<value name="View"   value="V" hint="Default" />
+		<value name="Create" value="C" />
+		<value name="Modify" value="M" />
+		<value name="Delete" value="D" />
+		<value name="Admin"  value="A" />
+	</enumeration>
+
+	<entity name="AlbumACL" implements="ACL" hint="ACL(StandardOps)" comment="Photo album access control list" >
+		<property name="Album" type="PhotoAlbum" constraint="required" comment="Parent album to which permission applies." />
+	</entity>
+
+	<entity name="GalleryACL" implements="ACL" hint="ACL(StandardOps)" comment="Gallery album access control list" >
+		<property name="Gallery" type="Gallery" constraint="required" comment="Parent album to which permission applies." />
+	</entity>
+
+</package>
