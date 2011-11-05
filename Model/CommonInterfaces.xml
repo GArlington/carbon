@@ -14,7 +14,7 @@
 		<property name="ActivationTime" type="time" constraint='required' comment="Time of resource activation." />
 		<property name="DeactivationTime" type="time" comment="Time of resource deactivation." />
 	</entity>
-
+	
 	<entity name="Audited" abstract="true" comment="Allows logging of resource creation and updates." >
 		<property name="Creator" type="User" constraint="required" comment="Resource creator" />
 		<property name="CreationTime" type="time" constraint="required" comment="Resource creation time." />

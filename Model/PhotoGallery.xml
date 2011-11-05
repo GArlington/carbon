@@ -36,13 +36,17 @@
 		<value name="Admin"  value="A" />
 	</enumeration>
 
-	<entity name="AlbumACL" implements="ACL" hint="ACL(StandardOps)" comment="Photo album access control list" >
-		<property name="Album" type="PhotoAlbum" constraint="required" comment="Parent album to which permission applies." />
+	<entity name="AccessControl" abstract="true" implements="TimeActivation" comment="Access control base." >
+		<property name="Role" type="Role" comment="Role associated with permission." />
+		<property name="Operation" type="text:30" comment="Access controlled operation." />
 	</entity>
-
-	<entity name="GalleryACL" hint="ACL(Operation)" comment="Gallery album access control list" >
-		<property name="Gallery" type="Gallery" constraint="required" comment="Parent album to which permission applies." />
-		<property name="Operation" type="StandardOps" constraint="required" comment="Parent album to which permission applies." />
+	
+	<entity name="acl_Album" implements="AccessControl" comment="Photo album access control." >
+		<property name="Album" type="text:4000" constraint="required" comment="Parent album to which permission applies." />
 	</entity>
+	
+	<access-control name="aclAlbum" scope="PhotoAlbum">
+		<operation name="Read" />
+	</access-control>
 
 </package>
