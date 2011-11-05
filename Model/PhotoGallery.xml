@@ -40,7 +40,7 @@
 		<property name="Album" type="PhotoAlbum" constraint="required" comment="Parent album to which permission applies." />
 	</entity>
 
-	<entity name="GalleryACL" implements="ACL" hint="ACL(Operation)" comment="Gallery album access control list" >
+	<entity name="GalleryACL" hint="ACL(Operation)" comment="Gallery album access control list" >
 		<property name="Gallery" type="Gallery" constraint="required" comment="Parent album to which permission applies." />
 		<property name="Operation" type="StandardOps" constraint="required" comment="Parent album to which permission applies." />
 	</entity>

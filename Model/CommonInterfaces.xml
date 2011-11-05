@@ -22,8 +22,4 @@
 		<property name="UpdateTime" type="time" comment="Last resource updated time." />
 	</entity>
 
-	<entity name="ACL" abstract="true" comment="Entity is an Access Control List." >
-		<property name="Operation" type="text:30" constraint='required' comment="Access operation, e.g. read, write, etc." />
-	</entity>
-
 </package>
