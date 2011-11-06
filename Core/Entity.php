@@ -53,6 +53,23 @@ class Entity extends XmlElement
 	*/
 	public function __construct($node, $package)
 	{
+		if( $node )
+			$this->InitFromXml($node, $package);
+	}
+
+	/**
+	*  Returns true if entity implements given interface.
+	*/
+	public function HasInterface($name)
+	{
+		return in_array($name, $this->interfaces);
+	}
+	
+	/**
+	*  Initializes entity using given parameters.
+	*/
+	public function InitFromXml($node, $package) 
+	{
 		parent::__construct($node, $package);
 
 		$this->abstract = $this->ReadAttr('abstract');
@@ -75,15 +92,7 @@ class Entity extends XmlElement
 		foreach($this->indexes as $index)
 			$this->CheckConstraintTargets($index);
 	}
-
-	/**
-	*  Returns true if entity implements given interface.
-	*/
-	public function HasInterface($name)
-	{
-		return in_array($name, $this->interfaces);
-	}
-
+	
 	/**
 	*  Checks that constraint targets are all members of the entity.
 	*/
