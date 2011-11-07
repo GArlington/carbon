@@ -13,7 +13,7 @@ class Entity extends XmlElement
 {
 	/**
 	*  If true, the entity is abstract and is expected to have no database
-	*  representation. It is usualy used to inject members in other
+	*  representation. It is usualy used to inject properties in other
 	*  abstract or non-abstract entities.
 	*/
 	public $abstract;
@@ -25,15 +25,15 @@ class Entity extends XmlElement
 	public $refby      = array();
 
 	/**
-	*  List of all interface names that have been used to inject members
+	*  List of all interface names that have been used to inject properties
 	*  in this entity.
 	*/
 	public $interfaces = array();
 
 	/**
-	*  List of all members of the entity.
+	*  List of all properties of the entity.
 	*/
-	public $members = array();
+	public $properties = array();
 
 	/**
 	*  List of unique constraints defined for the entity.
@@ -64,11 +64,11 @@ class Entity extends XmlElement
 	{
 		return in_array($name, $this->interfaces);
 	}
-
+	
 	/**
 	*  Initializes entity using given parameters.
 	*/
-	public function InitFromXml($node, $package)
+	public function InitFromXml($node, $package) 
 	{
 		parent::__construct($node, $package);
 
@@ -77,7 +77,7 @@ class Entity extends XmlElement
 
 		// Load children...
 		if( isset($node->property) )
-			$this->ImportNodes($node->member, "EntityMember", $this->members);
+			$this->ImportNodes($node->property, "Property", $this->properties);
 
 		if( isset($node->unique) )
 			$this->ImportNodes($node->unique, "Unique", $this->uniques);
@@ -92,7 +92,7 @@ class Entity extends XmlElement
 		foreach($this->indexes as $index)
 			$this->CheckConstraintTargets($index);
 	}
-
+	
 	/**
 	*  Checks that constraint targets are all members of the entity.
 	*/
@@ -101,7 +101,7 @@ class Entity extends XmlElement
 		$fullname = sprintf("%s.%s.%s",$this->package->name, $this->name, $constraint->name);
 
 		foreach($constraint->ref as $reference)
-			if( !isset($this->members[$reference]) )
+			if( !isset($this->properties[$reference]) )
 				Print("\nERROR: Unknown property '$reference' referenced in '$fullname'");
 	}
 }
