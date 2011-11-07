@@ -105,30 +105,30 @@ class Model
 					print(" interfaces=[".implode(',', $object->interfaces)."]");
 					print(" tags=[".implode(',', array_keys($object->tags))."]");
 					print(" refby=[".implode(',', array_keys($object->refby))."]");
-					foreach($object->properties as $property) {
-						$type = $property->type . ($property->size?"[$property->size]":'');
-						printf("\n\t\t%-30s%-20s tags=[%s]", $property->name, $type, implode(',', array_keys($property->tags)));
+					foreach($object->members as $member) {
+						$type = $member->type . ($member->size?"[$member->size]":'');
+						printf("\n\t\t%-30s%-20s tags=[%s]", $member->name, $type, implode(',', array_keys($member->tags)));
 					}
 				}
-				elseif( $object instanceof Enumeration ) {
-					print("\n\n\tEnumeration $object->name");
-					foreach($object->values as $value)
-						printf("\n\t\t%-30s%-20s tags[%s]", $value->name, $value->value, implode(',', array_keys($value->tags)));
+				elseif( $object instanceof Enum ) {
+					print("\n\n\tEnum $object->name");
+					foreach($object->members as $member)
+						printf("\n\t\t%-30s%-20s tags[%s]", $member->name, $member->value, implode(',', array_keys($member->tags)));
 				}
 			}
 		}
 	}
 
 	/**
-	*  Validates that properties references in index, unique constraints,
+	*  Validates that members references in index, unique constraints,
 	*  etc are effectively members of said entity.
 	*/
 	private function SecondPass()
 	{
 		foreach($this->objDictionary as $object)
 			if( $object instanceof Entity ) {
-				// Validate property types...
-				$this->ValidatePropertyType($object);
+				// Validate member types...
+				$this->ValidateMemberType($object);
 
 				// Implements interfaces...
 				$implemented_interfaces = array();
@@ -136,51 +136,51 @@ class Model
 					$this->InjectInterface($object, $interface, $implemented_interfaces);
 
 				foreach($object->uniques as $unique)
-					$this->AssertPropertyList($object, $unique->ref, $unique->name);
+					$this->AssertMembersList($object, $unique->ref, $unique->name);
 
 				foreach($object->indexes as $index)
-					$this->AssertPropertyList($object, $index->ref, $index->name);
+					$this->AssertMembersList($object, $index->ref, $index->name);
 			}
 	}
 
 
 	/**
-	*  Prints an error if one of the properties in the received
-	*  comma delimited list contains an unknown property.
+	*  Prints an error if one of the members in the received
+	*  comma delimited list contains an unknown member.
 	*/
-	private function AssertPropertyList($entity, $list, $cname)
+	private function AssertMembersList($entity, $list, $cname)
 	{
 		$pkgname = $entity->package->name;
 		$fullname = "$pkgname.$entity->name.$cname";
 		foreach($list as $pname)
-			if(!isset($entity->properties[$pname]))
-				Print("\nERROR: Unknown property '$pname' referenced in '$fullname'");
+			if(!isset($entity->members[$pname]))
+				Print("\nERROR: Unknown member '$pname' referenced in '$fullname'");
 	}
 
 
 	/**
-	*  Validates given entity's properties types.
+	*  Validates given entity's members types.
 	*/
-	private function ValidatePropertyType($entity)
+	private function ValidateMemberType($entity)
 	{
-		foreach($entity->properties as $property) {
+		foreach($entity->members as $member) {
 			// Build fully qualified name for error reporting...
 			$pkgname = $entity->package->name;
-			$fqn = "$pkgname.$entity->name.$property->name";
+			$fqn = "$pkgname.$entity->name.$member->name";
 
 			// Check size against types...
-			if( ($property->type=="text" || $property->type=="binary") && $property->size<1 )
-					Print("\nERROR: Invalid property size for '$fqn'.");
+			if( ($member->type=="text" || $member->type=="binary") && $member->size<1 )
+					Print("\nERROR: Invalid member size for '$fqn'.");
 
-			if( $property->type!="text" && $property->type!="binary" && $property->size!=0 )
-					Print("\nERROR: Property size not allowed for '$fqn'.");
+			if( $member->type!="text" && $member->type!="binary" && $member->size!=0 )
+					Print("\nERROR: Member size not allowed for '$fqn'.");
 
 			// Set objects instances for reference types...
-			if( !in_array($property->type, Model::$BASE_TYPES) )
-				if( !isset($this->objDictionary[$property->type]) )
-					Print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
+			if( !in_array($member->type, Model::$BASE_TYPES) )
+				if( !isset($this->objDictionary[$member->type]) )
+					Print("\nERROR: Unknown member type ($member->type) for '$fqn'.");
 				else {
-					$t = $property->typeref = $this->objDictionary[$property->type];
+					$t = $member->typeref = $this->objDictionary[$member->type];
 
 					// While at it update reverse reference...
 					if( $t && $t instanceof Entity && !isset($t->refby[$entity->name]) )
@@ -209,16 +209,16 @@ class Model
 			return;
 		}
 
-		// Get instance of interface from manisfest and visit its properties,
+		// Get instance of interface from manisfest and visit its members,
 		// injecting those that are not already there.
 		$other = $this->objDictionary[$interface];
 		$otherpkgname = $other->package->name;
-		foreach($other->properties as $property)
-			if( isset($entity->properties[$property->name]) && !$recursing )
-				throw new Exception("Property '$fullname.$property->name' already implemented in interface '$otherpkgname.$interface'");
+		foreach($other->members as $member)
+			if( isset($entity->members[$member->name]) && !$recursing )
+				throw new Exception("Member '$fullname.$member->name' already implemented in interface '$otherpkgname.$interface'");
 			else {
-				$entity->properties[$property->name] = $property;
-				$entity->properties[$property->name]->interface = $interface;
+				$entity->members[$member->name] = $member;
+				$entity->members[$member->name]->interface = $interface;
 			}
 
 

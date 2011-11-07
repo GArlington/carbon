@@ -1,7 +1,7 @@
 <?php
 include_once("Q/Regex.php");
 include_once("XmlElement.php");
-include_once("Property.php");
+include_once("EntityMember.php");
 include_once("Unique.php");
 include_once("Index.php");
 
@@ -22,7 +22,7 @@ class Entity extends XmlElement
 	*  List of all entities refering to this one. It is filled by the model
 	*  class on its second pass.
 	*/
-	public $refby      = array();
+	public $refby = array();
 
 	/**
 	*  List of all interface names that have been used to inject members
@@ -76,7 +76,7 @@ class Entity extends XmlElement
 		$this->interfaces = Regex::SplitWords(',', $this->ReadAttr('implements'));
 
 		// Load children...
-		if( isset($node->property) )
+		if( isset($node->member) )
 			$this->ImportNodes($node->member, "EntityMember", $this->members);
 
 		if( isset($node->unique) )
@@ -102,6 +102,6 @@ class Entity extends XmlElement
 
 		foreach($constraint->ref as $reference)
 			if( !isset($this->members[$reference]) )
-				Print("\nERROR: Unknown property '$reference' referenced in '$fullname'");
+				Print("\nERROR: Unknown member '$reference' referenced in '$fullname'");
 	}
 }

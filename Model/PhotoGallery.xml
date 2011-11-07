@@ -2,47 +2,47 @@
 
 <package name="PhotoGallery">
 
-	<enumeration name="AlbumPrivacy">
-		<value name="Private" />
-		<value name="MembersOnly" />
-		<value name="Everyone" />
-	</enumeration>
+	<enum name="AlbumPrivacy">
+		<member name="Private" />
+		<member name="MembersOnly" />
+		<member name="Everyone" />
+	</enum>
 
 	<entity name="Gallery" implements="FlagActivation" comment="Photo gallery. A gallery can contain an unlimited number of photo albums." >
-		<property name="Title"    type="text:128" constraint="required" />
-		<property name="Keywords" type="text:100" />
+		<member name="Title"    type="text:128" constraint="required" />
+		<member name="Keywords" type="text:100" />
 	</entity>
 
 	<entity name="Album" implements="FlagActivation" comment="Photo album." >
-		<property name="Gallery"  type="Gallery" constraint="required" comment="Parent photo gallery." />
-		<property name="Date"     type="time" constraint="required" comment="Creation date." />
-		<property name="Access"   type="AlbumPrivacy" constraint="required" comment="Intended viewer audience." />
-		<property name="Keywords" type="text:100" />
+		<member name="Gallery"  type="Gallery" constraint="required" comment="Parent photo gallery." />
+		<member name="Date"     type="time" constraint="required" comment="Creation date." />
+		<member name="Access"   type="AlbumPrivacy" constraint="required" comment="Intended viewer audience." />
+		<member name="Keywords" type="text:100" />
 	</entity>
 
 	<entity name="Photo" implements="FlagActivation" comment="Photo." >
-		<property name="Album"       type="Album" constraint="required" comment="Parent album." />
-		<property name="Date"        type="time" constraint="required" comment="Creation date." />
-		<property name="Title"       type="text:100" comment="Short title." />
-		<property name="Description" type="text:1K" comment="Description." />
-		<property name="Keywords"    type="text:100" />
+		<member name="Album"       type="Album" constraint="required" comment="Parent album." />
+		<member name="Date"        type="time" constraint="required" comment="Creation date." />
+		<member name="Title"       type="text:100" comment="Short title." />
+		<member name="Description" type="text:1K" comment="Description." />
+		<member name="Keywords"    type="text:100" />
 	</entity>
 
-	<enumeration name="StandardOps" comment="Standard ACL operations" >
-		<value name="View"   value="V" hint="Default" />
-		<value name="Create" value="C" />
-		<value name="Modify" value="M" />
-		<value name="Delete" value="D" />
-		<value name="Admin"  value="A" />
-	</enumeration>
+	<enum name="StandardOps" comment="Standard ACL operations" >
+		<member name="View" />
+		<member name="Create" />
+		<member name="Modify" />
+		<member name="Delete" />
+		<member name="Admin" />
+	</enum>
 
 	<entity name="AccessControl" abstract="true" implements="TimeActivation" comment="Access control base." >
-		<property name="Role" type="Role" comment="Role associated with permission." />
-		<property name="Operation" type="text:30" comment="Access controlled operation." />
+		<member name="Role" type="Role" comment="Role associated with permission." />
+		<member name="Operation" type="text:30" comment="Access controlled operation." />
 	</entity>
-	
+
 	<enum name="AlbumAccess" hint="acl(Album)">
-		<operation name="Read" />
+		<member name="Read" />
 	</enum>
 
 </package>

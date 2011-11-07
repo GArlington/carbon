@@ -1,13 +1,13 @@
 <?php
 include_once("XmlElement.php");
-include_once("PropertyConstraint.php");
+include_once("Constraint.php");
 include_once("Q/Regex.php");
 
 
 /**
 *  Implements an entity property.
 */
-class Property extends XmlElement
+class EntityMember extends XmlElement
 {
 	/**
 	*  Property type as read in the XML file.
@@ -70,7 +70,7 @@ class Property extends XmlElement
 
 		// Read constraints
 		foreach( Regex::SplitWords(';',$this->ReadAttr("constraint")) as $signature ) {
-			$constraint = new PropertyConstraint($signature);
+			$constraint = new Constraint($signature);
 			$this->constraints[$constraint->name] = $constraint;
 		}
 

@@ -3,23 +3,23 @@
 <package name="CommonInterfaces">
 
 	<entity name="Email" abstract="true" comment="Resource requires an email address." >
-		<property name="Email" type="text:128" constraint="required" comment="Email address." />
+		<member name="Email" type="text:128" constraint="required" comment="Email address." />
 	</entity>
 
 	<entity name="FlagActivation" abstract="true" comment="Resource can be activated/deactivated by a flag." >
-		<property name="Active" type="logical" comment="True if resource is available." />
+		<member name="Active" type="logical" comment="True if resource is available." />
 	</entity>
 
 	<entity name="TimeActivation" abstract="true" comment="Resource can be activated/deactivated based on time." >
-		<property name="ActivationTime" type="time" constraint='required' comment="Time of resource activation." />
-		<property name="DeactivationTime" type="time" comment="Time of resource deactivation." />
+		<member name="ActivationTime" type="time" constraint='required' comment="Time of resource activation." />
+		<member name="DeactivationTime" type="time" comment="Time of resource deactivation." />
 	</entity>
-	
+
 	<entity name="Audited" abstract="true" comment="Allows logging of resource creation and updates." >
-		<property name="Creator" type="User" constraint="required" comment="Resource creator" />
-		<property name="CreationTime" type="time" constraint="required" comment="Resource creation time." />
-		<property name="Updater" type="User" comment="Last resource updater." />
-		<property name="UpdateTime" type="time" comment="Last resource updated time." />
+		<member name="Creator" type="User" constraint="required" comment="Resource creator" />
+		<member name="CreationTime" type="time" constraint="required" comment="Resource creation time." />
+		<member name="Updater" type="User" comment="Last resource updater." />
+		<member name="UpdateTime" type="time" comment="Last resource updated time." />
 	</entity>
 
 </package>

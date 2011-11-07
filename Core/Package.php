@@ -1,7 +1,7 @@
 <?php
 include_once("XmlElement.php");
 include_once("Entity.php");
-include_once("Enumeration.php");
+include_once("Enum.php");
 
 
 /**
@@ -18,6 +18,6 @@ class Package extends XmlElement
 		parent::__construct($node);
 
 		$this->ImportNodes($node->entity, "Entity", $objDictionary, $this );
-		$this->ImportNodes($node->enumeration, "Enumeration", $objDictionary, $this );
+		$this->ImportNodes($node->enum, "Enum", $objDictionary, $this );
 	}
 }
