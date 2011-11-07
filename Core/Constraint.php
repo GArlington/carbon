@@ -5,7 +5,7 @@ include_once("Q/Regex.php");
 /**
 *  Implements a property constraint.
 */
-class PropertyConstraint
+class Constraint
 {
 	/**
 	*  Constraint name.

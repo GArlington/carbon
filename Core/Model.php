@@ -1,4 +1,5 @@
 <?php
+include_once("Magic.php");
 include_once("Q/DirectoryIO.php");
 include_once("Q/Regex.php");
 include_once("Package.php");
@@ -10,28 +11,17 @@ include_once("Package.php");
 */
 class Model
 {
-	/**
-	*  Allowed base types. Every other type is expected
-	*  to be found in the model.
-	*/
-	public static $BASE_TYPES = array(
-		'logical',
-		'integer',
-		'real',
-		'time',
-		'text',
-		'binary'
-	);
+	public static $BASE_TYPES = array('logical','integer','real','time','text','binary');
 
 	/**
 	*  Contains all model objects indexed by object name.
 	*/
-	public $objDictionary = array();
+	public $manifest = array();
 
 	/**
 	*  Contains all model objects grouped by package.
 	*/
-	public $pkgDictionary = array();
+	public $packages = array();
 
 	/**
 	*  Namespace supplied to the constructor. Used by generators.
@@ -69,21 +59,19 @@ class Model
 			if( !$rootnode = simplexml_load_file($file) )
 				throw new Exception("Error reading xml file");
 
-			if( $rootnode->GetName() == "package" )
-				$package = new Package($rootnode, $this->objDictionary);
+			if( $rootnode->GetName() == "package" ) {
+				$package = new Package($rootnode, $this->manifest);
+				if( isset($this->packages[$package->name]) )
+					throw new Exception("Package $package->name already loaded." );
+				$this->packages[$package->name] = $package;
+			}
 			else
 				throw new Exception("Unrecognized xml root node '".$rootnode->GetName()."' in: $file");
 		}
 
-		// Create the package dictionary from the objects one.
-		foreach($this->objDictionary as $object)
-			$this->pkgDictionary[$object->package->name][$object->name] = $object;
-
 		// Sort dictionaries...
-		ksort($this->objDictionary);
-		ksort($this->pkgDictionary);
-		foreach($this->pkgDictionary as &$object_dictionary)
-			ksort($object_dictionary);
+		ksort($this->manifest);
+		ksort($this->packages);
 
 		// Perform operations that require a complete model...
 		$this->SecondPass();
@@ -95,7 +83,7 @@ class Model
 	*/
 	public function Debug()
 	{
-		foreach($this->pkgDictionary as $name=>$pkgobjects) {
+		foreach($this->packages as $name=>$pkgobjects) {
 			print("\n_______________________________________________");
 			print("\nPackage $name");
 
@@ -125,38 +113,16 @@ class Model
 	*/
 	private function SecondPass()
 	{
-		foreach($this->objDictionary as $object)
+		foreach($this->manifest as $object)
 			if( $object instanceof Entity ) {
-				// Validate property types...
 				$this->ValidatePropertyType($object);
 
 				// Implements interfaces...
 				$implemented_interfaces = array();
 				foreach($object->interfaces as $interface)
 					$this->InjectInterface($object, $interface, $implemented_interfaces);
-
-				foreach($object->uniques as $unique)
-					$this->AssertPropertyList($object, $unique->ref, $unique->name);
-
-				foreach($object->indexes as $index)
-					$this->AssertPropertyList($object, $index->ref, $index->name);
 			}
 	}
-
-
-	/**
-	*  Prints an error if one of the properties in the received
-	*  comma delimited list contains an unknown property.
-	*/
-	private function AssertPropertyList($entity, $list, $cname)
-	{
-		$pkgname = $entity->package->name;
-		$fullname = "$pkgname.$entity->name.$cname";
-		foreach($list as $pname)
-			if(!isset($entity->properties[$pname]))
-				Print("\nERROR: Unknown property '$pname' referenced in '$fullname'");
-	}
-
 
 	/**
 	*  Validates given entity's properties types.
@@ -177,10 +143,10 @@ class Model
 
 			// Set objects instances for reference types...
 			if( !in_array($property->type, Model::$BASE_TYPES) )
-				if( !isset($this->objDictionary[$property->type]) )
+				if( !isset($this->manifest[$property->type]) )
 					Print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
 				else {
-					$t = $property->typeref = $this->objDictionary[$property->type];
+					$t = $property->typeref = $this->manifest[$property->type];
 
 					// While at it update reverse reference...
 					if( $t && $t instanceof Entity && !isset($t->refby[$entity->name]) )
@@ -204,14 +170,14 @@ class Model
 		$fullname = "$pkgname.$entity->name";
 
 		// Do we know this interface?
-		if( !isset($this->objDictionary[$interface]) ) {
+		if( !isset($this->manifest[$interface]) ) {
 			Print("\nERROR: Unknown interface '$interface' specified in '$fullname'");
 			return;
 		}
 
 		// Get instance of interface from manisfest and visit its properties,
 		// injecting those that are not already there.
-		$other = $this->objDictionary[$interface];
+		$other = $this->manifest[$interface];
 		$otherpkgname = $other->package->name;
 		foreach($other->properties as $property)
 			if( isset($entity->properties[$property->name]) && !$recursing )
@@ -220,7 +186,6 @@ class Model
 				$entity->properties[$property->name] = $property;
 				$entity->properties[$property->name]->interface = $interface;
 			}
-
 
 		// Add this interface to the list of already implemented interfaces...
 		$implemented_interfaces[] = $interface;

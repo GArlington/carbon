@@ -2,21 +2,6 @@
 include_once("Q/Regex.php");
 include_once("Hint.php");
 
-/**
-*  The maximum identifier length is necessary because of database identifier
-*  limitations. Oracle allows 30 characters, MySql allows 64, etc. We also
-*  want to garantee some space for prefixes/suffixes when generating
-*  some entity related tables, constraints, etc. Set value according to
-*  database(s) you want to support.
-*/
-define('MAX_IDENTIFIER_LENGTH', 25);
-
-
-/**
-*  If language is not specified in <label> tags this is the one we assume.
-*/
-define('DEFAULT_LANG','en');
-
 
 /**
 *  This is the base class of most model objects and components.
@@ -58,37 +43,46 @@ class XmlElement
 	/**
 	*  Constructor.
 	*/
-	protected function __construct($node, $package=null)
+	protected function __construct($package, $node=null)
 	{
-		$this->node    = $node;
 		$this->package = $package;
-		$this->name    = $this->ReadAttr("name");
-		$this->comment = $this->ReadAttr("comment");
 
-		$classname = get_class($this);
+		if( $node ) {
+			$this->node    = $node;
+			$this->name    = $this->ReadAttr("name");
+			$this->comment = $this->ReadAttr("comment");
 
-		if( $this->name=="" )
-			throw new Exception("Missing $classname name.");
+			$classname = get_class($this);
 
-		if( strlen($this->name) > MAX_IDENTIFIER_LENGTH )
-			throw new Exception("Identifier too long: $this->name, max: ".MAX_IDENTIFIER_LENGTH);
+			if( trim($this->name)=='' )
+				throw new Exception("Missing $classname name in package $package->name");
 
-		// Read hints...
-		foreach( Regex::SplitWords(';',$this->ReadAttr("hint")) as $signature ) {
-			if( trim($signature) ) {
-				$hint = new Hint($signature);
-				$this->hints[$hint->name] = $hint;
+			if( strlen($this->name) > MAX_IDENTIFIER_LENGTH )
+				throw new Exception("$classname identifier $this->name too long in package $package->name" );
+
+			// Read hints...
+			foreach( Regex::SplitWords(';',$this->ReadAttr("hint")) as $signature ) {
+				if( trim($signature) )
+					$this->SetHint($signature);
 			}
+
+			if( $node->label )
+				foreach( $node->label as $label ) {
+					$lang = isset($label['lang']) ? (string)$label['lang'] : DEFAULT_LANG;
+					$label = (string)$label;
+					$this->SetLabel($lang, $label);
+				}
 		}
+	}
 
-		if( $node->label )
-			foreach( $node->label as $label ) {
-				if( isset($label['lang']) )
-					$lang = trim( (string)$label['lang'] );
-				else
-					$lang = DEFAULT_LANG;
-				$this->labels[$lang] = trim((string)$label);
-			}
+
+	/**
+	*  Adds a hint signature to the element.
+	*/
+	public function SetHint($signature)
+	{
+		$hint = new Hint($signature);
+		$this->hints[$hint->name] = $hint;
 	}
 
 
@@ -98,6 +92,15 @@ class XmlElement
 	public function GetHint($name)
 	{
 		return isset($this->hints[$name]) ? $this->hints[$name] : null;
+	}
+
+
+	/**
+	*  Returns label value for given language or element name if none defined.
+	*/
+	public function SetLabel($lang, $text)
+	{
+		$this->labels[trim($lang)] = trim($text);
 	}
 
 
@@ -122,13 +125,13 @@ class XmlElement
 	/**
 	*  Imports child nodes in given dictionary.
 	 */
-	protected function ImportNodes($nodes, $class, &$dictionary, $package="")
+	protected function ImportNodes($package, $nodes, $class, &$dictionary)
 	{
 		foreach($nodes as $node) {
-			$instance = new $class($node, $package);
+			$instance = new $class($package, $node);
 			if( isset($dictionary[$instance->name]) ) {
 				$classname = get_class($this);
-				throw new Exception("Duplicate $class name '$instance->name' in $classname '$this->name'.");
+				throw new Exception("Duplicate $class name '$instance->name' in '$this->name'.");
 			}
 			$dictionary[$instance->name] = $instance;
 		}

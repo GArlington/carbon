@@ -15,7 +15,7 @@
 /********************************************************************************
 	Basic document settings
 *******************************************************************************/
-a { color:#168;	text-decoration:none; }
+a { color:#168;	color:blue; text-decoration:none; }
 p { margin-bottom:20px; margin-left:50px; width:850px; }
 
 div.license {
@@ -43,7 +43,24 @@ h2 {
 	font-weight:normal;
 	clear:both;
 }
+h3 {
+	font-weight:normal;
+	font-size:larger;
+	text-transform:uppercase;
+	margin:0;
+	letter-spacing:2px;
+	color:#888;
+}
 
+h4 {
+	width:850;
+	font-weight:normal;
+	font-size:inherit;
+	text-transform:uppercase;
+	margin:0;
+	letter-spacing:2px;
+	color:#888;
+}
 /*******************************************************************************
 	Entity specific
 ********************************************************************************/
@@ -57,15 +74,13 @@ canvas.relationships {
 	border:solid 1px #ccc;
 }
 
-div.index { width:850px; margin-left:50px; }
+div.index { width:850px; margin:20px 50px; }
 div.break { content:'.'; clear:both; visibility:hidden; }
-
 div.index a {
 	display:block;
 	width:200px;
 	float:left;
 	margin:2px;
-	text-decoration:none;
 }
 div.index a.Enumeration:before { content:'['; }
 div.index a.Enumeration:after { content:']'; }
@@ -87,18 +102,19 @@ table.data th {
 	border-top:solid 1px #bbb;
 	border-bottom:double 3px #bbb;
 	background: #eee;
-	--background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e0e0e0), to(#eeeeee));
-	--background: -moz-linear-gradient(top, #e0e0e0, #eeeeee);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eeeeee), to(#e0e0e0));
+	background: -moz-linear-gradient(top, #eeeeee, #e0e0e0);
 	vertical-align:text-top;
+	color:#333;
 }
 table.data td {
 	padding:5px 10px;
-	border-bottom:solid 1px #ddd;
+	border-bottom:solid 1px #ccc;
 	vertical-align:text-top;
 }
 table.data td:first-child,
 table.data th:first-child
-{ border-right:solid 1px #ddd }
+{ border-right:solid 1px #ccc }
 
 table.data td:last-child  { width:100% }
 table.data td.required    { font-weight:bold; color:black; }
