@@ -1,12 +1,12 @@
 <?php
 include_once("XmlElement.php");
-include_once("EnumMember.php");
+include_once("EnumerationValue.php");
 
 
 /**
 *  Implements a model enumeration.
 */
-class Enum extends XmlElement
+class Enumeration extends XmlElement
 {
 	/**
 	*  Enumeration members.
@@ -21,8 +21,8 @@ class Enum extends XmlElement
 	{
 		parent::__construct($node, $package);
 
-		if( isset($node->member) )
-			$this->ImportNodes($node->member, "EnumMember", $this->members);
+		if( isset($node->value) )
+			$this->ImportNodes($node->member, "EnumerationMember", $this->members);
 
 		if( !$this->members || !count($this->members) )
 			throw new Exception("No enumeration members for '$package->name.$this->name'");
@@ -32,7 +32,7 @@ class Enum extends XmlElement
 		$knownValues = array();
 		foreach($this->members as $item)
 			if( in_array($item->value, $knownValues) )
-				throw new Exception("Duplicate enumeration member in '$package->name.$this->name'");
+				throw new Exception("Duplicate enumeration value in '$package->name.$this->name'");
 			else
 				$knownValues[] = $item->value;
 	}

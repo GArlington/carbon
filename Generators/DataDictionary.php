@@ -21,7 +21,7 @@ class DataDictionary implements IGenerator
 
 		// Generate individual pages...
 		foreach($model->objDictionary as $object) {
-			if( ! ($object instanceof Entity || $object instanceof Enum) )
+			if( ! ($object instanceof Entity || $object instanceof Enumeration) )
 				continue;
 
 			$writer = new FileWriter("$dir/$object->name.html");
