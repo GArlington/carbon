@@ -144,7 +144,7 @@
 		$n = count($Nodes);
 		// calculate canevas size by allocating a certain amount pixel real estate per entity...
 		if( !$Entity->abstract && $n>0 ):
-			$w = $h = 200 + sqrt($n * 3000);
+			$w = $h = 200 + sqrt($n * 4000);
 	?>
 		<canvas class='relationships' id="model" width="<?=$w?>" height="<?=$h?>">
 		</canvas>

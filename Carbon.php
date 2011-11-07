@@ -4,7 +4,6 @@ include_once("Q/Introspector.php");
 include_once("Core/Model.php");
 include_once("CarbonOptions.php");
 
-
 /*----------------------------------------------------------------------------
 	PRINT BANNER AND PARSE COMMAND LINE OPTIONS
 ----------------------------------------------------------------------------*/
@@ -53,8 +52,8 @@ catch( Exception $ex ) {
 ----------------------------------------------------------------------------*/
 
 $elapsed = time() - $tmstart;
-$nobj = count($model->objDictionary);
-$npkg = count($model->pkgDictionary);
+$nobj = count($model->manifest);
+$npkg = count($model->packages);
 print("\n");
 print("\nBuild finished in $elapsed seconds");
 print("\nModel contains $nobj objects in $npkg packages.");

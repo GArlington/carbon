@@ -12,20 +12,29 @@
 <body>
 	<h1><?=$Namespace?> Data Dictionary</h1>
 
-	<?foreach($PackageObjects as $packagename => $objects):?>
-		<h2><a name='<?=$packagename?>'></a><?=$packagename?></span></h2>
-		<div class='index'>
-		<?
-		foreach($objects as $objectname => $object):
-			$class = get_class($object);
-			if( $object instanceof Entity && $object->abstract )
-				$class.=' abstract';
+	<?foreach($PackageObjects as $packagename => $package):?>
 
-		?>
-			<a class='<?=$class?>' href='<?=$objectname?>.html'><?=$objectname?></a>
-		<? endforeach ?>
-		<div class='break'></div>
-		</div>
+		<h2><a name='<?=$packagename?>'></a><?=$packagename?></span></h2>
+		<? if( count($package->entities) ): ?>
+			<div class='index'>
+			<h4>Entities</h4>
+			<? foreach($package->entities as $entity): ?>
+				<a class='<?= $entity->abstract ? 'abstract':'' ?>' href='<?=$entity->name?>.html'><?=$entity->name?></a>
+			<? endforeach ?>
+			<div class='break'></div>
+			</div>
+		<? endif ?>
+
+		<? if( count($package->enumerations) ): ?>
+			<div class='index'>
+			<h4>Enumerations</h4>
+			<? foreach($package->enumerations as $enumeration): ?>
+				<a href='<?=$enumeration->name?>.html'><?=$enumeration->name?></a>
+			<? endforeach ?>
+			<div class='break'></div>
+			</div>
+		<? endif ?>
+
 	<? endforeach ?>
 
 	<div class='license'><?=$License?></div>

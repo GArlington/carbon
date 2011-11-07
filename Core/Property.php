@@ -1,6 +1,6 @@
 <?php
 include_once("XmlElement.php");
-include_once("PropertyConstraint.php");
+include_once("Constraint.php");
 include_once("Q/Regex.php");
 
 
@@ -50,32 +50,31 @@ class Property extends XmlElement
 	/*
 	*  Constructor.
 	*/
-	function __construct($node, $package=null)
+	function __construct($package, $node=null)
 	{
-		parent::__construct($node, $package);
+		parent::__construct($package, $node);
 
-		// Read default value...
-		$this->default = $this->ReadAttr("default");
+		if( $node ) {
+			$this->default = $this->ReadAttr("default");
+			$this->rawtype = $this->ReadAttr("type");
 
-		// Read type as defined, before we start messing with it...
-		$this->rawtype = $this->ReadAttr("type");
+			// Read size handling K and M multipliers (e.g. text:20K or binary:50M)
+			list($this->type,$this->size) = explode(':',$this->rawtype.":0");
+			$multiplier = strtolower(substr($this->size, -1));
+			if( $multiplier=='k' )
+				$this->size *= 1024;
+			elseif( $multiplier=='m' )
+				$this->size *= (1024 * 1024);
 
-		// Read size handling K and M multipliers (e.g. text:20K or binary:50M)
-		list($this->type,$this->size) = explode(':',$this->rawtype.":0");
-		$multiplier = strtolower(substr($this->size, -1));
-		if( $multiplier=='k' )
-			$this->size *= 1024;
-		elseif( $multiplier=='m' )
-			$this->size *= (1024 * 1024);
+			// Read constraints...
+			foreach( Regex::SplitWords(';',$this->ReadAttr("constraint")) as $signature ) {
+				$constraint = new Constraint($signature);
+				$this->constraints[$constraint->name] = $constraint;
+			}
 
-		// Read constraints
-		foreach( Regex::SplitWords(';',$this->ReadAttr("constraint")) as $signature ) {
-			$constraint = new PropertyConstraint($signature);
-			$this->constraints[$constraint->name] = $constraint;
+			if( $this->type=='logical' && $this->default=='' )
+				$this->default = 'false';
 		}
-
-		if( $this->type=='logical' && $this->default=='' )
-			$this->default = 'false';
 	}
 
 	/**

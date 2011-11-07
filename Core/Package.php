@@ -10,14 +10,31 @@ include_once("Enumeration.php");
 */
 class Package extends XmlElement
 {
+	public $entities     = array();
+	public $enumerations = array();
+
 	/**
 	*  Constructor.
 	*/
-	function __construct($node, &$objDictionary)
+	function __construct($node, &$manifest)
 	{
-		parent::__construct($node);
+		parent::__construct(null, $node);
 
-		$this->ImportNodes($node->entity, "Entity", $objDictionary, $this );
-		$this->ImportNodes($node->enumeration, "Enumeration", $objDictionary, $this );
+		$this->ImportNodes($this , $node->entity, "Entity", $this->entities);
+		foreach( $this->entities as $entity ) {
+			if( isset($manifest[$entity->name]) )
+				throw new Exception("$entity->name already implemented in ".($manifest[$entity->name]->package->name));
+			$manifest[$entity->name] = $entity;
+		}
+
+		$this->ImportNodes($this, $node->enumeration, "Enumeration", $this->enumerations);
+		foreach( $this->enumerations as $enumeration ) {
+			if( isset($manifest[$enumeration->name]) )
+				throw new Exception( "$enumeration->name already implemented in ".($manifest[$enumeration->name]->package->name) );
+			$manifest[$enumeration->name] = $enumeration;
+		}
+
+		ksort($this->entities);
+		ksort($this->enumerations);
 	}
 }

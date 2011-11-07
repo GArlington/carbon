@@ -20,7 +20,7 @@ class DataDictionary implements IGenerator
 		copy("Generators/views/css/style.css", "$dir/css/style.css");
 
 		// Generate individual pages...
-		foreach($model->objDictionary as $object) {
+		foreach($model->manifest as $object) {
 			if( ! ($object instanceof Entity || $object instanceof Enumeration) )
 				continue;
 
@@ -41,7 +41,7 @@ class DataDictionary implements IGenerator
 		$writer = new FileWriter("$dir/index.html");
 		$view = new View("Generators/views/DataDictionary/index.php");
 		$viewdata = array(
-			'index' => $model->pkgDictionary,
+			'index' => $model->packages,
 			'namespace' => $model->namespace,
 			'license' => $model->license
 		);

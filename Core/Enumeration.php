@@ -17,23 +17,21 @@ class Enumeration extends XmlElement
 	/*
 	*  Constructor.
 	*/
-	function __construct($node, $package)
+	function __construct($package, $node=null)
 	{
-		parent::__construct($node, $package);
+		parent::__construct($package, $node);
 
-		if( isset($node->value) )
-			$this->ImportNodes($node->value, "EnumerationValue", $this->values);
+		if( $node ) {
+			if( isset($node->value) )
+				$this->ImportNodes($package, $node->value, "EnumerationValue", $this->values);
 
-		if( !$this->values || !count($this->values) )
-			throw new Exception("No enumeration values for '$package->name.$this->name'");
-
-		// Ensure unicity of enumeration values (names are already
-		// checked by the ImportNodes() method...)
-		$knownValues = array();
-		foreach($this->values as $item)
-			if( in_array($item->value, $knownValues) )
-				throw new Exception("Duplicate enumeration value in '$package->name.$this->name'");
-			else
-				$knownValues[] = $item->value;
+			// Check values unicity, names are already checked by ImportNodes()
+			$knownValues = array();
+			foreach($this->values as $item)
+				if( in_array($item->value, $knownValues) )
+					throw new Exception("Duplicate enumeration value in '$package->name.$this->name'");
+				else
+					$knownValues[] = $item->value;
+		}
 	}
 }

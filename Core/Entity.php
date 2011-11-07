@@ -51,11 +51,31 @@ class Entity extends XmlElement
 	/**
 	*  Constructor.
 	*/
-	public function __construct($node, $package)
+	public function __construct($package, $node=null)
 	{
-		if( $node )
-			$this->InitFromXml($node, $package);
+		parent::__construct($package, $node);
+
+		if( $node ) {
+			$this->abstract = $this->ReadAttr('abstract');
+			$this->interfaces = Regex::SplitWords(',', $this->ReadAttr('implements'));
+
+			if( isset($node->property) )
+				$this->ImportNodes($package, $node->property, "Property", $this->properties);
+
+			if( isset($node->unique) )
+				$this->ImportNodes($package, $node->unique, "Unique", $this->uniques);
+
+			if( isset($node->index) )
+				$this->ImportNodes($package, $node->index, "Index", $this->indexes);
+
+			foreach($this->uniques as $unique)
+				$this->CheckConstraintTargets($unique);
+
+			foreach($this->indexes as $index)
+				$this->CheckConstraintTargets($index);
+		}
 	}
+
 
 	/**
 	*  Returns true if entity implements given interface.
@@ -64,35 +84,8 @@ class Entity extends XmlElement
 	{
 		return in_array($name, $this->interfaces);
 	}
-	
-	/**
-	*  Initializes entity using given parameters.
-	*/
-	public function InitFromXml($node, $package) 
-	{
-		parent::__construct($node, $package);
 
-		$this->abstract = $this->ReadAttr('abstract');
-		$this->interfaces = Regex::SplitWords(',', $this->ReadAttr('implements'));
 
-		// Load children...
-		if( isset($node->property) )
-			$this->ImportNodes($node->property, "Property", $this->properties);
-
-		if( isset($node->unique) )
-			$this->ImportNodes($node->unique, "Unique", $this->uniques);
-
-		if( isset($node->index) )
-			$this->ImportNodes($node->index, "Index", $this->indexes);
-
-		// Validate children...
-		foreach($this->uniques as $unique)
-			$this->CheckConstraintTargets($unique);
-
-		foreach($this->indexes as $index)
-			$this->CheckConstraintTargets($index);
-	}
-	
 	/**
 	*  Checks that constraint targets are all members of the entity.
 	*/
