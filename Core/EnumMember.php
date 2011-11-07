@@ -5,7 +5,7 @@ include_once("XmlElement.php");
 /**
 *  Implements an enumeration value.
 */
-class EnumMember extends XmlElement
+class EnumerationValue extends XmlElement
 {
 	public $value;
 
