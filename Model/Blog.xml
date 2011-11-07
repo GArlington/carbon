@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<package name="Blog">
+
+	<enum name="BlogEntryState">
+		<member name="Draft" />
+		<member name="Reviewed" />
+		<member name="Published" />
+	</enum>
+
+	<entity name="Blog" >
+		<member name="Name"   type="text:60" constraint="required" />
+		<member name="Author" type="User" constraint="required" />
+	</entity>
+
+	<entity name="BlogEntry" implements="FlagActivation,TimeActivation" comment="Blog entry." >
+		<member name="Blog"     type="Blog"           constraint="required" />
+		<member name="Title"    type="text:128"       constraint="required" />
+		<member name="Date"     type="time"           constraint="required" />
+		<member name="Content"  type="text:10K"       constraint="required" />
+		<member name="State"    type="BlogEntryState" constraint="required" />
+		<member name="Keywords" type="text:100" />
+	</entity>
+
+	<entity name="BlogComment" implements="FlagActivation,Email" comment="Blog entry." >
+		<member name="Date"    type="time"    constraint="required" />
+		<member name="Content" type="text:1K" constraint="required" />
+	</entity>
+
+	<entity name="BlogConfig" hint="config" comment="Per blog configuration" >
+		<member name="Blog" type="Blog" />
+		<member name="MaxComments" type="integer" comment="Maximum number of comments per post." />
+		<member name="DaysNew"     type="integer" comment="Number of days before considering a post as old." />
+	</entity>
+
+</package>

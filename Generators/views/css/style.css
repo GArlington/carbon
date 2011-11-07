@@ -1,0 +1,128 @@
+@media print
+{
+	.noprint { display:none }
+	body { font:normal 10pt sans-serif; padding:0; margin:0 }
+}
+
+@media screen
+{
+	body {
+		padding:5em;
+		font: normal 10pt "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
+		color: #555;
+	}
+}
+/********************************************************************************
+	Basic document settings
+*******************************************************************************/
+a { color:#168;	text-decoration:none; }
+p { margin-bottom:20px; margin-left:50px; width:850px; }
+
+div.license {
+	font-size:9pt;
+	font-style:italic;
+	border-top:solid 1px #ccc;
+	margin-top:5em;
+	padding:10px;
+	width:900px;
+}
+
+h1 {
+	font-size:250%;
+	width:900px;
+	text-align:center;
+	padding:10px 0;
+	border-bottom:solid 1px #ccc;
+	border-top:solid 1px #ccc;
+}
+
+h2 {
+	padding: 0 5px 5px 0;
+	width: 900px;
+	font-size:150%;
+	font-weight:normal;
+	clear:both;
+}
+
+/*******************************************************************************
+	Entity specific
+********************************************************************************/
+canvas.relationships {
+	--position:absolute;
+ 	--top:160px;
+ 	--left:1000px;
+ 	margin-left:50px;
+ 	margin-top:50px;
+	background-color:#eee;
+	border:solid 1px #ccc;
+}
+
+div.index { width:850px; margin-left:50px; }
+div.break { content:'.'; clear:both; visibility:hidden; }
+
+div.index a {
+	display:block;
+	width:200px;
+	float:left;
+	margin:2px;
+	text-decoration:none;
+}
+div.index a.Enumeration:before { content:'['; }
+div.index a.Enumeration:after { content:']'; }
+
+.abstract { font-style: italic; }
+
+/*******************************************************************************
+	Grid-like tables (data)
+********************************************************************************/
+table.data {
+	width: 850px;
+	border-collapse: collapse;
+	margin-left:50px;
+	--border:solid 1px #bbb;
+}
+table.data th {
+	text-align:left;
+	padding:5px 10px;
+	border-top:solid 1px #bbb;
+	border-bottom:double 3px #bbb;
+	background: #eee;
+	--background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e0e0e0), to(#eeeeee));
+	--background: -moz-linear-gradient(top, #e0e0e0, #eeeeee);
+	vertical-align:text-top;
+}
+table.data td {
+	padding:5px 10px;
+	border-bottom:solid 1px #ddd;
+	vertical-align:text-top;
+}
+table.data td:first-child,
+table.data th:first-child
+{ border-right:solid 1px #ddd }
+
+table.data td:last-child  { width:100% }
+table.data td.required    { font-weight:bold; color:black; }
+
+/*******************************************************************************
+	Dictionary-like tables
+********************************************************************************/
+table.dict    { margin-left:50px; border-collapse:collapse; }
+table.dict th { text-align:left; padding-right:1em; vertical-align:text-top; white-space:nowrap; }
+table.dict td { padding-left:1em; width:100%; vertical-align:text-top; }
+
+/*******************************************************************************
+	Hints
+*******************************************************************************/
+span.hint {
+	border:solid 1px #FFCC88;
+	background:#FFFFAA;
+	border-radius:5px;
+	padding:2px 6px;
+}
+
+/*******************************************************************************
+	Highlights
+*******************************************************************************/
+span.highlight {
+	background:yellow;
+}

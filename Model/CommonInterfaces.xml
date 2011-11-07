@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<package name="CommonInterfaces">
+
+	<entity name="Email" abstract="true" comment="Resource requires an email address." >
+		<member name="Email" type="text:128" constraint="required" comment="Email address." />
+	</entity>
+
+	<entity name="FlagActivation" abstract="true" comment="Resource can be activated/deactivated by a flag." >
+		<member name="Active" type="logical" comment="True if resource is available." />
+	</entity>
+
+	<entity name="TimeActivation" abstract="true" comment="Resource can be activated/deactivated based on time." >
+		<member name="ActivationTime" type="time" constraint='required' comment="Time of resource activation." />
+		<member name="DeactivationTime" type="time" comment="Time of resource deactivation." />
+	</entity>
+
+	<entity name="Audited" abstract="true" comment="Allows logging of resource creation and updates." >
+		<member name="Creator" type="User" constraint="required" comment="Resource creator" />
+		<member name="CreationTime" type="time" constraint="required" comment="Resource creation time." />
+		<member name="Updater" type="User" comment="Last resource updater." />
+		<member name="UpdateTime" type="time" comment="Last resource updated time." />
+	</entity>
+
+</package>
