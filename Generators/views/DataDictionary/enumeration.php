@@ -28,17 +28,17 @@
 	<h2>Values</h2>
 	<table class='data'>
 		<tr><th>Name</th><th>Value</th><th>Hint</th><th>Comment</th></tr>
-		<? foreach($Enumeration->values as $value):
+		<? foreach($Enumeration->members as $member):
 			$valHints = array();
-			foreach($value->hints as $hint)
+			foreach($member->hints as $hint)
 				$valHints[] = "<span class='hint'>$hint->signature</span>";
 			$valHints = count($valHints) ? implode(' ', $valHints) : '';
 		?>
 			<tr>
-				<td><?= $value->name ?><sup></td>
-				<td><?= $value->value ?></td>
+				<td><?= $member->name ?><sup></td>
+				<td><?= $member->value ?></td>
 				<td><?= $valHints ?></td>
-				<td><?= Highlight($value->comment) ?></td>
+				<td><?= Highlight($member->comment) ?></td>
 			</tr>
 		<? endforeach ?>
 	</table>

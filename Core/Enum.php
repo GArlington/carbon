@@ -9,9 +9,9 @@ include_once("EnumerationValue.php");
 class Enumeration extends XmlElement
 {
 	/**
-	*  Enumeration values.
+	*  Enumeration members.
 	*/
-	public $values = array();
+	public $members = array();
 
 
 	/*
@@ -22,15 +22,15 @@ class Enumeration extends XmlElement
 		parent::__construct($node, $package);
 
 		if( isset($node->value) )
-			$this->ImportNodes($node->value, "EnumerationValue", $this->values);
+			$this->ImportNodes($node->member, "EnumerationMember", $this->members);
 
-		if( !$this->values || !count($this->values) )
-			throw new Exception("No enumeration values for '$package->name.$this->name'");
+		if( !$this->members || !count($this->members) )
+			throw new Exception("No enumeration members for '$package->name.$this->name'");
 
-		// Ensure unicity of enumeration values (names are already
+		// Ensure unicity of enumeration members (names are already
 		// checked by the ImportNodes() method...)
 		$knownValues = array();
-		foreach($this->values as $item)
+		foreach($this->members as $item)
 			if( in_array($item->value, $knownValues) )
 				throw new Exception("Duplicate enumeration value in '$package->name.$this->name'");
 			else

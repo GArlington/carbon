@@ -24,7 +24,7 @@
 	$ReferencedBy = count($links) ? implode(', ', $links) : '';
 
 	$References = array();
-	foreach($Entity->properties as $property) {
+	foreach($Entity->members as $property) {
 		$t = $property->typeref;
 		if( $t && $t instanceof Entity && !$t->abstract && !in_array($t->name,$References ) )
 			$References[] = $t->name;
@@ -83,7 +83,7 @@
 	<table class='data'>
 		<tr><th>Name</th><th>Type</th><th>Default</th><th>Constraints</th><th>Hints</th><th>Comment</th></tr>
 
-		<? foreach($Entity->properties as $property):
+		<? foreach($Entity->members as $property):
 			// Constraints:
 			$constraints = array();
 			foreach($property->constraints as $constraint)
