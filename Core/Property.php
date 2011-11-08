@@ -40,12 +40,6 @@ class Property extends XmlElement
 	*/
 	public $typeref;
 
-	/**
-	*  Interface name if injected from one.
-	*  This is filled by the model instance on the second pass.
-	*/
-	public $interface;
-
 
 	/*
 	*  Constructor.
@@ -56,21 +50,8 @@ class Property extends XmlElement
 
 		if( $node ) {
 			$this->default = $this->ReadAttr("default");
-			$this->rawtype = $this->ReadAttr("type");
-
-			// Read size handling K and M multipliers (e.g. text:20K or binary:50M)
-			list($this->type,$this->size) = explode(':',$this->rawtype.":0");
-			$multiplier = strtolower(substr($this->size, -1));
-			if( $multiplier=='k' )
-				$this->size *= 1024;
-			elseif( $multiplier=='m' )
-				$this->size *= (1024 * 1024);
-
-			// Read constraints...
-			foreach( Regex::SplitWords(';',$this->ReadAttr("constraint")) as $signature ) {
-				$constraint = new Constraint($signature);
-				$this->constraints[$constraint->name] = $constraint;
-			}
+			$this->SetType($this->ReadAttr("type"));
+			$this->SetConstraint($this->ReadAttr("constraint"));
 		}
 	}
 
@@ -80,5 +61,29 @@ class Property extends XmlElement
 	function HasConstraint($name)
 	{
 		return isset($this->constraints[$name]);
+	}
+
+	/**
+	*  Sets the various rawtype, type and size members from received raw type
+	*/
+	public function SetType($type)
+	{
+		$this->rawtype = $type;
+
+		// Read size handling K and M multipliers (e.g. text:20K or binary:50M)
+		list($this->type,$this->size) = explode(':',$this->rawtype.":0");
+		$multiplier = strtolower(substr($this->size, -1));
+		if( $multiplier=='k' )
+			$this->size *= 1024;
+		elseif( $multiplier=='m' )
+			$this->size *= (1024 * 1024);
+	}
+
+	public function SetConstraint($constraint)
+	{
+		foreach( Regex::SplitWords(';',$constraint) as $signature ) {
+			$constraint = new Constraint($signature);
+			$this->constraints[$constraint->name] = $constraint;
+		}
 	}
 }

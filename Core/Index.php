@@ -8,11 +8,23 @@ include_once("XmlElement.php");
 */
 class Index extends XmlElement
 {
-	public $ref=array();
+	public $ref = array();
 
-	public function __construct($package, $node)
+	/**
+	*  Constructor.
+	*/
+	public function __construct($package, $node=null)
 	{
 		parent::__construct($package, $node);
-		$this->ref = Regex::SplitWords(',',$this->ReadAttr("ref"));
+		if( $node )
+			$this->SetReferences( $this->ReadAttr("ref") );
+	}
+
+	/**
+	*  Assigns index references using given comma delimited string.
+	*/
+	public function SetReferences($refs)
+	{
+		$this->ref = Regex::SplitWords(',', $refs);
 	}
 }

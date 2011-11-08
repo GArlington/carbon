@@ -43,13 +43,10 @@ class Model
 	}
 
 	/**
-	*  Loads model from xml files in given directory.
-	*  - The search is recursive.
-	*  - One package per file.
+	*  Recursively loads model from xml package files in given directory.
 	*/
 	public function Load($path)
 	{
-		// Are there any files to read?
 		if( !($files=DirectoryIO::GetFiles($path, "*.xml", true)) )
 			throw new Exception("No files to read in path: '$path'");
 
@@ -119,7 +116,7 @@ class Model
 
 			$implemented_interfaces = array();
 			foreach($object->interfaces as $interface)
-				$this->ImplementObjectInterface($object, $interface, $implemented_interfaces);
+				$object->ImplementInterface($interface, $this->manifest);
 		}
 	}
 
@@ -150,56 +147,5 @@ class Model
 					$property->typeref = $t;
 				}
 		}
-	}
-
-
-	/**
-	*  Implement given object interface. If said interface also implements some
-	*  interfaces we recursively implement them unless it's already been implemented.
-	*/
-	private function ImplementObjectInterface($object, $interface, &$implemented_interfaces, $recursing=false)
-	{
-		// Already implemented?
-		if( in_array($interface, $implemented_interfaces) )
-			return;
-
-		$fqn = sprintf("%s.%s",$object->package->name,$object->name);
-
-		if( !isset($this->manifest[$interface]) ) {
-			Print("\nERROR: Unknown interface '$interface' specified in '$fqn'");
-			return;
-		}
-
-		$foreign = $this->manifest[$interface];
-		$foreignpkg = $foreign->package->name;
-
-		if( get_class($object) != get_class($foreign) ) {
-			Print("\nERROR: Interface '$interface' not compatible in '$fqn'");
-			return;
-		}
-
-		if( $object instanceof Entity )
-			foreach($foreign->properties as $property)
-				if( isset($object->properties[$property->name]) && !$recursing )
-					throw new Exception("Property '$fqn.$property->name' already implemented in interface '$foreignpkg.$interface'");
-				else {
-					$object->properties[$property->name] = $property;
-					$object->properties[$property->name]->interface = $interface;
-				}
-		elseif( $object instanceof Enumeration )
-			foreach($foreign->values as $value )
-				if( isset($object->values[$value->name]) && !$recursing )
-						throw new Exception("Value '$fqn.$property->name' already implemented in interface '$foreignpkg.$interface'");
-					else {
-						$object->values[$value->name] = $value;
-						$object->values[$value->name]->interface = $interface;
-					}
-
-		// Add this interface to the list of already implemented interfaces...
-		$implemented_interfaces[] = $interface;
-
-		// Recurse if this foreign entity/interface also have some interfaces of its own...
-		foreach($foreign->interfaces as $subinterface)
-				$this->ImplementObjectInterface($object, $subinterface, $implemented_interfaces, true);
 	}
 }

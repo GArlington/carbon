@@ -98,8 +98,6 @@
 			$classes = array();
 			if( $property->HasConstraint('required') )
 				$classes[] = 'required';
-			if( $property->interface && $property->interface!=$entity->name )
-				$classes[] = 'abstract';
 			$type = $property->typeref ? "<a href='$property->type.html'>$property->type</a>" : $property->rawtype;
 
 			$propHints = array();
