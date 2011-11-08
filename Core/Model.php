@@ -113,85 +113,93 @@ class Model
 	*/
 	private function SecondPass()
 	{
-		foreach($this->manifest as $object)
-			if( $object instanceof Entity ) {
+		foreach($this->manifest as $object) {
+			if( $object instanceof Entity )
 				$this->ValidatePropertyType($object);
 
-				// Implements interfaces...
-				$implemented_interfaces = array();
-				foreach($object->interfaces as $interface)
-					$this->InjectInterface($object, $interface, $implemented_interfaces);
-			}
+			$implemented_interfaces = array();
+			foreach($object->interfaces as $interface)
+				$this->ImplementObjectInterface($object, $interface, $implemented_interfaces);
+		}
 	}
 
 	/**
 	*  Validates given entity's properties types.
 	*/
-	private function ValidatePropertyType($entity)
+	private function ValidatePropertyType($object)
 	{
-		foreach($entity->properties as $property) {
-			// Build fully qualified name for error reporting...
-			$pkgname = $entity->package->name;
-			$fqn = "$pkgname.$entity->name.$property->name";
+		foreach($object->properties as $property) {
+			$fqn = sprintf("%s.%s.%s",$object->package->name,$object->name,$property->name);
 
-			// Check size against types...
 			if( ($property->type=="text" || $property->type=="binary") && $property->size<1 )
 					Print("\nERROR: Invalid property size for '$fqn'.");
 
 			if( $property->type!="text" && $property->type!="binary" && $property->size!=0 )
 					Print("\nERROR: Property size not allowed for '$fqn'.");
 
-			// Set objects instances for reference types...
 			if( !in_array($property->type, Model::$BASE_TYPES) )
 				if( !isset($this->manifest[$property->type]) )
 					Print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
 				else {
-					$t = $property->typeref = $this->manifest[$property->type];
+					$t = $this->manifest[$property->type];
 
-					// While at it update reverse reference...
-					if( $t && $t instanceof Entity && !isset($t->refby[$entity->name]) )
-						$t->refby[$entity->name] = $entity;
+					// Also update foreign reference...
+					if( $t && $t instanceof Entity && !isset($t->refby[$object->name]) )
+						$t->refby[$object->name] = $object;
+
+					$property->typeref = $t;
 				}
 		}
 	}
 
 
 	/**
-	*  Implement given interface in entity. If said interface also implements some
+	*  Implement given object interface. If said interface also implements some
 	*  interfaces we recursively implement them unless it's already been implemented.
 	*/
-	private function InjectInterface($entity, $interface, &$implemented_interfaces, $recursing=false)
+	private function ImplementObjectInterface($object, $interface, &$implemented_interfaces, $recursing=false)
 	{
 		// Already implemented?
 		if( in_array($interface, $implemented_interfaces) )
 			return;
 
-		$pkgname = $entity->package->name;
-		$fullname = "$pkgname.$entity->name";
+		$fqn = sprintf("%s.%s",$object->package->name,$object->name);
 
-		// Do we know this interface?
 		if( !isset($this->manifest[$interface]) ) {
-			Print("\nERROR: Unknown interface '$interface' specified in '$fullname'");
+			Print("\nERROR: Unknown interface '$interface' specified in '$fqn'");
 			return;
 		}
 
-		// Get instance of interface from manisfest and visit its properties,
-		// injecting those that are not already there.
-		$other = $this->manifest[$interface];
-		$otherpkgname = $other->package->name;
-		foreach($other->properties as $property)
-			if( isset($entity->properties[$property->name]) && !$recursing )
-				throw new Exception("Property '$fullname.$property->name' already implemented in interface '$otherpkgname.$interface'");
-			else {
-				$entity->properties[$property->name] = $property;
-				$entity->properties[$property->name]->interface = $interface;
-			}
+		$foreign = $this->manifest[$interface];
+		$foreignpkg = $foreign->package->name;
+
+		if( get_class($object) != get_class($foreign) ) {
+			Print("\nERROR: Interface '$interface' not compatible in '$fqn'");
+			return;
+		}
+
+		if( $object instanceof Entity )
+			foreach($foreign->properties as $property)
+				if( isset($object->properties[$property->name]) && !$recursing )
+					throw new Exception("Property '$fqn.$property->name' already implemented in interface '$foreignpkg.$interface'");
+				else {
+					$object->properties[$property->name] = $property;
+					$object->properties[$property->name]->interface = $interface;
+				}
+		elseif( $object instanceof Enumeration )
+			foreach($foreign->values as $value )
+				if( isset($object->values[$value->name]) && !$recursing )
+						throw new Exception("Value '$fqn.$property->name' already implemented in interface '$foreignpkg.$interface'");
+					else {
+						$object->values[$value->name] = $value;
+						$object->values[$value->name]->interface = $interface;
+					}
 
 		// Add this interface to the list of already implemented interfaces...
 		$implemented_interfaces[] = $interface;
 
-		// Recurse if this other entity/interface also have some interfaces of its own...
-		foreach($other->interfaces as $subinterface)
-				$this->InjectInterface($entity, $subinterface, $implemented_interfaces, true);
+		// Recurse if this foreign entity/interface also have some interfaces of its own...
+		foreach($foreign->interfaces as $subinterface)
+				$this->ImplementObjectInterface($object, $subinterface, $implemented_interfaces, true);
 	}
 }

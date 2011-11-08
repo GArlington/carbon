@@ -1,89 +1,93 @@
 <?php
-	$Namespace = $viewdata['namespace'];
-	$License = $viewdata['license'];
-	$Entity = $viewdata['object'];
+	$namespace = $viewdata['namespace'];
+	$license   = $viewdata['license'];
+	$entity    = $viewdata['object'];
 
-	$EntityName  = $Entity->name;
-	$PackageName = $Entity->package->name;
-	$PackageLink = "<a href='index.html#$PackageName'>$PackageName</a>";
+	$entityName = $entity->name;
+	$pkgName   = $entity->package->name;
+	$pkgLink   = "<a href='index.html#$pkgName'>$pkgName</a>";
 
 	$links = array();
-	foreach($Entity->hints as $hint)
+	foreach($entity->hints as $hint)
 		$links[] = "<span class='hint'>$hint->signature</span>";
-	$Hints = count($links) ? implode(' ', $links) : '';
+	$hints = count($links) ? implode(' ', $links) : '';
 
 	$links = array();
-	foreach($Entity->interfaces as $interface)
+	foreach($entity->interfaces as $interface)
 		$links[] = "<a class='' href='$interface.html'>$interface</a>";
-	$Interfaces = count($links) ? implode(', ', $links) : '';
+	$interfaces = count($links) ? implode(', ', $links) : '';
 
 	$links = array();
-	foreach($Entity->refby as $ref)
+	foreach($entity->refby as $ref)
 		if( !$ref->abstract )
 			$links[] = "<a href='$ref->name.html'>$ref->name</a>";
-	$ReferencedBy = count($links) ? implode(', ', $links) : '';
+	$referencedBy = count($links) ? implode(', ', $links) : '';
 
-	$References = array();
-	foreach($Entity->properties as $property) {
+	$references = array();
+	foreach($entity->properties as $property) {
 		$t = $property->typeref;
-		if( $t && $t instanceof Entity && !$t->abstract && !in_array($t->name,$References ) )
-			$References[] = $t->name;
+		if( $t && $t instanceof Entity && !$t->abstract && !in_array($t->name,$references ) )
+			$references[] = $t->name;
 	}
 
 	// Graph nodes and edges...
-	$Nodes = array();
-	$Edges = array();
-	$Nodes[$EntityName] = "{label:'$EntityName', color:'d00'}";
+	$nodes = array();
+	$edges = array();
+	$nodes[$entityName] = "{label:'$entityName', color:'d00'}";
 
-	foreach($References as $name)
-		if( !isset($Nodes[$name]) ) {
-			$Nodes[$name] = "{label:'$name', color:'#000'}";
-			$Edges[] = array($EntityName, $name);
+	foreach($references as $name)
+		if( !isset($nodes[$name]) ) {
+			$nodes[$name] = "{label:'$name', color:'#000'}";
+			$edges[] = array($entityName, $name);
 		}
 
-	foreach($Entity->refby as $ref) {
+	foreach($entity->refby as $ref) {
 		if( $ref->abstract )
 			continue;
 
-		if( !isset($Nodes[$ref->name]) )
-			$Nodes[$ref->name] = "{label:'$ref->name', color:'#888'}";
-		$Edges[] = array($ref->name, $EntityName);
+		if( !isset($nodes[$ref->name]) )
+			$nodes[$ref->name] = "{label:'$ref->name', color:'#888'}";
+		$edges[] = array($ref->name, $entityName);
 	}
+
+	// calculate canevas size by estimating surface per entity...
+	$n = count($nodes);
+	$canevasSize = (!$entity->abstract && $n>0) ? (250+sqrt($n*3000)) : 0;
  ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?= $PackageName?>.<?= $EntityName?></title>
+	<title><?= $pkgName ?>.<?= $entityName ?></title>
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
 	<script src="lib/jquery-1.6.4.min.js"></script>
 	<script src="lib/springy.js"></script>
 	<script src="lib/springyui.js"></script>
 </head>
 <body>
-	<? $class=$Entity->abstract?" class='abstract'":'' ?>
-	<h1<?=$class?>><?= $PackageLink?>.<?= $EntityName?></h1>
-	<p><?=Highlight($Entity->comment) ?></p>
+	<? $class=$entity->abstract?" class='abstract'":'' ?>
+	<h1<?= $class ?>><?= $pkgLink ?>.<?= $entityName ?></h1>
+	<p><?= Highlight($entity->comment) ?></p>
 
-	<?if( $Interfaces ): ?>
+	<?if( $interfaces ): ?>
 		<h2>Interfaces</h2>
-		<p><?= $Interfaces?></p>
-	<?endif?>
+		<p><?= $interfaces ?></p>
+	<?endif ?>
 
-	<?if( $ReferencedBy ): ?>
+	<?if( $referencedBy ): ?>
 		<h2>Referenced by</h2>
-		<p><?= $ReferencedBy?></p>
-	<?endif?>
+		<p><?= $referencedBy ?></p>
+	<?endif ?>
 
-	<?if( $Hints ): ?>
+	<?if( $hints ): ?>
 		<h2>Hints</h2>
-		<p><?= $Hints?></p>
-	<?endif?>
+		<p><?= $hints ?></p>
+	<?endif ?>
 
 	<h2>Properties</h2>
 	<table class='data'>
 		<tr><th>Name</th><th>Type</th><th>Default</th><th>Constraints</th><th>Hints</th><th>Comment</th></tr>
 
-		<? foreach($Entity->properties as $property):
+		<?  foreach($entity->properties as $property):
 			// Constraints:
 			$constraints = array();
 			foreach($property->constraints as $constraint)
@@ -94,7 +98,7 @@
 			$classes = array();
 			if( $property->HasConstraint('required') )
 				$classes[] = 'required';
-			if( $property->interface && $property->interface!=$Entity->name )
+			if( $property->interface && $property->interface!=$entity->name )
 				$classes[] = 'abstract';
 			$type = $property->typeref ? "<a href='$property->type.html'>$property->type</a>" : $property->rawtype;
 
@@ -111,54 +115,48 @@
 				<td><?= $propHints ?></td>
 				<td><?= Highlight($property->comment) ?></td>
 			</tr>
-		<? endforeach ?>
+		<?  endforeach ?>
 	</table>
 
-	<?if( count($Entity->uniques) ): ?>
+	<?if( count($entity->uniques) ): ?>
 	<h2>Unicity constraints</h2>
 	<table class='dict'>
-		<? foreach($Entity->uniques as $name=>$unique): ?>
+		<?  foreach($entity->uniques as $name=>$unique): ?>
 		<tr>
-			<th><?= $name?></th>
-			<td>(<?=implode(', ',$unique->ref) ?>)</td>
+			<th><?= $name ?></th>
+			<td>(<?= implode(', ',$unique->ref) ?>)</td>
 		</tr>
-		<? endforeach ?>
+		<?  endforeach ?>
 	</table>
-	<?endif?>
+	<?endif ?>
 
-	<?if( count($Entity->indexes) ): ?>
+	<?if( count($entity->indexes) ): ?>
 	<h2>Indexes</h2>
 	<table class='dict'>
-		<? foreach($Entity->indexes as $name=>$index): ?>
+		<?  foreach($entity->indexes as $name=>$index): ?>
 		<tr>
-			<th><?= $name?></th>
-			<td>(<?=implode(', ',$index->ref) ?>)</td>
+			<th><?= $name ?></th>
+			<td>(<?= implode(', ',$index->ref) ?>)</td>
 		</tr>
-		<? endforeach ?>
+		<?  endforeach ?>
 	</table>
-	<?endif?>
+	<?endif ?>
 
 
 
-	<?
-		$n = count($Nodes);
-		// calculate canevas size by allocating a certain amount pixel real estate per entity...
-		if( !$Entity->abstract && $n>0 ):
-			$w = $h = 200 + sqrt($n * 4000);
-	?>
-		<canvas class='relationships' id="model" width="<?=$w?>" height="<?=$h?>">
+	<? if( $canevasSize ): ?>
+		<canvas class='relationships' id="model" width="<?= $canevasSize ?>" height="<?= $canevasSize ?>">
 		</canvas>
-
 		<script>
 			var graph = new Graph();
 
-			<?foreach($Nodes as $name=>$attr): ?>
-				var <?= $name?> = graph.newNode(<?= $attr?>);
-			<? endforeach ?>
+			<?foreach($nodes as $name=>$attr): ?>
+				var <?= $name ?> = graph.newNode(<?= $attr ?>);
+			<?  endforeach ?>
 
-			<?foreach($Edges as $node): ?>
+			<?foreach($edges as $node): ?>
 				graph.newEdge(<?= $node[0] ?>, <?= $node[1] ?>);
-			<? endforeach ?>
+			<?  endforeach ?>
 
 			jQuery(function(){
 				var springy = jQuery('#model').springy({
@@ -166,9 +164,9 @@
 				});
 			});
 		</script>
-	<? endif ?>
+	<?  endif ?>
 
 
-	<div class='license'><?= $License?></div>
+	<div class='license'><?= $license ?></div>
 </body>
 </html>
