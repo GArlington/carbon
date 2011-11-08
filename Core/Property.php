@@ -71,9 +71,6 @@ class Property extends XmlElement
 				$constraint = new Constraint($signature);
 				$this->constraints[$constraint->name] = $constraint;
 			}
-
-			if( $this->type=='logical' && $this->default=='' )
-				$this->default = 'false';
 		}
 	}
 
