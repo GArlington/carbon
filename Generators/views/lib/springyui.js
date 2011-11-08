@@ -29,8 +29,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 		var graph = this.graph = params.graph || new Graph();
 
 		var stiffness = params.stiffness || 400.0;
-		var repulsion = params.repulsion || 200.0;
-		var damping = params.damping || 0.25;
+		var repulsion = params.repulsion || 300.0;
+		var damping = params.damping || 0.44;
 
 		var canvas = this[0];
 		var ctx = canvas.getContext("2d");

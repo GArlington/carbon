@@ -1,25 +1,25 @@
 <?php
-	$Namespace = $viewdata['namespace'];
-	$License = $viewdata['license'];
-	$PackageObjects = $viewdata['index'];
-?>
+	$namespace = $viewdata['namespace'];
+	$license   = $viewdata['license'];
+	$packages  = $viewdata['index'];
+ ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?=$Namespace?> Data Dictionary</title>
+	<title><?= $namespace ?> Data Dictionary</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body>
-	<h1><?=$Namespace?> Data Dictionary</h1>
+	<h1><?= $namespace ?> Data Dictionary</h1>
 
-	<?foreach($PackageObjects as $packagename => $package):?>
+	<? foreach($packages as $pkgname => $package): ?>
 
-		<h2><a name='<?=$packagename?>'></a><?=$packagename?></span></h2>
+		<h2><a name='<?= $pkgname ?>'></a><?= $pkgname ?></span></h2>
 		<? if( count($package->entities) ): ?>
 			<div class='index'>
 			<h4>Entities</h4>
 			<? foreach($package->entities as $entity): ?>
-				<a class='<?= $entity->abstract ? 'abstract':'' ?>' href='<?=$entity->name?>.html'><?=$entity->name?></a>
+				<a class='<?= $entity->abstract ? 'abstract':'' ?>' href='<?= $entity->name ?>.html'><?= $entity->name ?></a>
 			<? endforeach ?>
 			<div class='break'></div>
 			</div>
@@ -29,7 +29,7 @@
 			<div class='index'>
 			<h4>Enumerations</h4>
 			<? foreach($package->enumerations as $enumeration): ?>
-				<a href='<?=$enumeration->name?>.html'><?=$enumeration->name?></a>
+				<a href='<?= $enumeration->name ?>.html'><?= $enumeration->name ?></a>
 			<? endforeach ?>
 			<div class='break'></div>
 			</div>
@@ -37,6 +37,6 @@
 
 	<? endforeach ?>
 
-	<div class='license'><?=$License?></div>
+	<div class='license'><?= $license ?></div>
 </body>
 </html>

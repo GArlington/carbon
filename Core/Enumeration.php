@@ -9,10 +9,14 @@ include_once("EnumerationValue.php");
 class Enumeration extends XmlElement
 {
 	/**
+	*  List of all interface names.
+	*/
+	public $interfaces = array();
+
+	/**
 	*  Enumeration values.
 	*/
 	public $values = array();
-
 
 	/*
 	*  Constructor.
@@ -22,6 +26,8 @@ class Enumeration extends XmlElement
 		parent::__construct($package, $node);
 
 		if( $node ) {
+			$this->interfaces = Regex::SplitWords(',', $this->ReadAttr('implements'));
+
 			if( isset($node->value) )
 				$this->ImportNodes($package, $node->value, "EnumerationValue", $this->values);
 
