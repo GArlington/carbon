@@ -42,6 +42,8 @@
 
 	<enumeration name="AlbumAccess" implements="BaseAccess" hint="acl(Album)">
 		<value name="Admin" value="A" />
+		<value name="Rate" />
+		<value name="Comment" />
 	</enumeration>
 
 </package>

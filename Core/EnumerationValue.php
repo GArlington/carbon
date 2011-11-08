@@ -12,7 +12,7 @@ class EnumerationValue extends XmlElement
 	/*
 	*  Constructor.
 	*/
-	function __construct($package, $node)
+	function __construct($package, $node=null)
 	{
 		parent::__construct($package, $node);
 		$this->value = $this->ReadAttr("value", $this->name);

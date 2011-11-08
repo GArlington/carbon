@@ -5,7 +5,6 @@ include_once("Property.php");
 include_once("Unique.php");
 include_once("Index.php");
 
-
 /**
 *  Implements a model entity.
 */
@@ -22,7 +21,7 @@ class Entity extends XmlElement
 	*  List of all entities refering to this one. It is filled by the model
 	*  class on its second pass.
 	*/
-	public $refby      = array();
+	public $refby = array();
 
 	/**
 	*  List of all interface names that have been used to inject properties
@@ -46,6 +45,12 @@ class Entity extends XmlElement
 	*  These normaly only have database representations.
 	*/
 	public $indexes = array();
+
+	/**
+	*  List of interfaces that have effectively been implemented.
+	*  Internally used by the ImplementInterface() method.
+	*/
+	private $implementedInterfaces = array();
 
 
 	/**
@@ -76,15 +81,90 @@ class Entity extends XmlElement
 		}
 	}
 
-
 	/**
 	*  Returns true if entity implements given interface.
 	*/
 	public function HasInterface($name)
 	{
-		return in_array($name, $this->interfaces);
+		return in_array($name, $this->implementedInterfaces);
 	}
 
+	/**
+	*  Adds an enumeration value.
+	*/
+	public function AddProperty($name, $type, $default="", $comment="", $constraint="", $hint="", $labels=null)
+	{
+		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $name);
+
+		if( isset($this->properties[$name]) )
+			throw new Exception("Duplicate property '$fqn'");
+
+		$property = new Property($this->package);
+		$property->name = $name;
+		$property->SetType($type);
+		$property->default = $default;
+		$property->comment = $comment;
+		$property->SetConstraint($constraint);
+		$property->hint = $hint;
+		$property->labels = $labels ? $labels : array();
+	}
+
+	/**
+	*  Adds a unicity constraint. Receives a Unique instance.
+	*/
+	public function AddUnicityConstraint($constraint)
+	{
+		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $constraint->name);
+		if( $this->uniques[$constraint->name] )
+			throw new Exception("Duplicate unicity constraint '$fqn'");
+		$this->uniques[$constraint->name] = $constraint;
+	}
+
+	/**
+	*  Adds a unicity constraint. Receives a Unique instance.
+	*/
+	public function AddIndex($index)
+	{
+		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $index->name);
+		if( $this->indexes[$index->name] )
+			throw new Exception("Duplicate index '$fqn'");
+		$this->indexes[$index->name] = $index;
+	}
+
+	/**
+	*  Implements given interface from model manifest.
+	*/
+	public function ImplementInterface($name, &$manifest, $recursing=false)
+	{
+		// Leave if already implemented:
+		if( $this->HasInterface($name) )
+			return;
+
+		// Construct our fully qualified name:
+		$fqn = sprintf("%s.%s",$this->package->name, $this->name);
+
+		// Leave if interface is unknown:
+		if( !isset($manifest[$name]) || !($manifest[$name] instanceof $this) ) {
+			print("\nERROR: Invalid interface '$name' in '$fqn'");
+			return;
+		}
+
+		// Create reference to foreign component:
+		$foreign = $manifest[$name];
+		$foreignpkg = $foreign->package->name;
+
+		// Import foreign properties:
+		foreach($foreign->properties as $property)
+			if( isset($this->properties[$property->name]) && !$recursing )
+				throw new Exception("Property '$fqn.$property->name' already implemented in interface '$foreignpkg.$name'");
+			else
+				$this->properties[$property->name] = $property;
+		$this->implementedInterfaces[] = $name;
+
+		// Recurse if this foreign entity also have some interfaces of its own:
+		foreach($foreign->interfaces as $subinterface)
+			$this->ImplementObjectInterface($subinterface, $manifest, true);
+	}
 
 	/**
 	*  Checks that constraint targets are all members of the entity.

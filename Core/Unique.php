@@ -8,17 +8,23 @@ include_once("XmlElement.php");
 */
 class Unique extends XmlElement
 {
-	/**
-	*  Target properties.
-	*/
-	public $ref=array();
+	public $ref = array();
 
 	/**
 	*  Constructor.
 	*/
-	public function __construct($package, $node)
+	public function __construct($package, $node=null)
 	{
 		parent::__construct($package, $node);
-		$this->ref = Regex::SplitWords(',',$this->ReadAttr("ref"));
+		if( $node )
+			$this->SetReferences( $this->ReadAttr("ref") );
+	}
+
+	/**
+	*  Assigns unique references using given comma delimited string.
+	*/
+	public function SetReferences($refs)
+	{
+		$this->ref = Regex::SplitWords(',', $refs);
 	}
 }

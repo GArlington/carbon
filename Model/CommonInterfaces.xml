@@ -11,10 +11,10 @@
 	</entity>
 
 	<entity name="TimeActivation" abstract="true" comment="Resource can be activated/deactivated based on time." >
-		<property name="ActivationTime" type="time" constraint='required' comment="Time of resource activation." />
-		<property name="DeactivationTime" type="time" comment="Time of resource deactivation." />
+		<property name="ActivationTime" type="time" constraint='required;LaterThan(2000-01-01)' comment="Time of resource activation." />
+		<property name="DeactivationTime" type="time" constraint="Trim;LaterThan(@ActivationTime);MD5" comment="Time of resource deactivation." />
 	</entity>
-	
+
 	<entity name="Audited" abstract="true" comment="Allows logging of resource creation and updates." >
 		<property name="Creator" type="User" constraint="required" comment="Resource creator" />
 		<property name="CreationTime" type="time" constraint="required" comment="Resource creation time." />
