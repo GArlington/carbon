@@ -1,4 +1,20 @@
 <?php
+/*----------------------------------------------------------------------------
+	STARTUP STATISTICS RECORDING
+----------------------------------------------------------------------------*/
+
+$tmstart = time();
+
+/*----------------------------------------------------------------------------
+	INSTALL OUR OWN ERROR HANDLER FOR CLEANER OUTPUT
+----------------------------------------------------------------------------*/
+
+set_error_handler("ErrorHandler");
+
+/*----------------------------------------------------------------------------
+	INCLUDE SUPPORT FILES
+----------------------------------------------------------------------------*/
+
 include_once("Q/DirectoryIO.php");
 include_once("Q/Introspector.php");
 include_once("Core/Model.php");
@@ -13,13 +29,7 @@ $opt = new BuilderOptions();
 $opt->Parse($argv);
 
 /*----------------------------------------------------------------------------
-	STARTUP STATISTICS RECORDING
-----------------------------------------------------------------------------*/
-
-$tmstart = time();
-
-/*----------------------------------------------------------------------------
-	LOAD MODEL
+	RUN
 ----------------------------------------------------------------------------*/
 
 try {		
@@ -73,3 +83,32 @@ print("\n");
 print("\nBuild finished in $elapsed seconds");
 print("\nModel contains $nobj objects in $npkg packages.");
 print("\n");
+
+/*----------------------------------------------------------------------------
+	CUSTOM ERROR HANDLER
+----------------------------------------------------------------------------*/
+function ErrorHandler($errno, $errstr, $errfile, $errline) 
+{
+	// if @ operator was prepended we ignore the error...
+	if( error_reporting() == 0 )
+		return true;
+		
+	switch ($errno) {
+		case E_NOTICE:
+		case E_USER_NOTICE:
+			$errors = "Notice";
+			break;
+		case E_WARNING:
+		case E_USER_WARNING:
+			$errors = "Warning";
+			break;
+		case E_ERROR:
+		case E_USER_ERROR:
+			$errors = "Fatal Error";
+			break;
+		default:
+			$errors = "Unknown";
+			break;
+	}
+	die("\n\n$errors: $errstr\nfile: $errfile\nline: $errline\n");
+}
