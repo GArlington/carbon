@@ -24,7 +24,7 @@ include_once("CarbonOptions.php");
 	PRINT BANNER AND PARSE COMMAND LINE OPTIONS
 ----------------------------------------------------------------------------*/
 
-print("\nCarbon Builder 1.0\n");
+print("\nCarbon Builder 1.0");
 $opt = new BuilderOptions();
 $opt->Parse($argv);
 
@@ -40,14 +40,14 @@ try {
 		foreach(DirectoryIO::GetFiles($opt->PluginsDir,"*.php") as $f)
 			include_once($f);
 
-		print("\n\nLoading model plugins...");
 		foreach(Introspector::GetImplementorsOf("IPlugin") as $plugin) {
 			$plugins[$plugin] = new $plugin();
 		}
 	}
 
 	// Load model...
-	$model = new Model($opt->Namespace, $opt->License);
+	print("\n\nLoading model:");
+	$model = new Model($opt->Namespace, $opt->License);	
 	$model->Load($opt->ModelDir, $plugins);
 
 	// Create main output directory:
@@ -58,7 +58,7 @@ try {
 		include_once($f);
 
 	// Run generators:
-	print("\n\nRunning generators...");
+	print("\n\nRunning generators:");
 	foreach(Introspector::GetImplementorsOf("IGenerator") as $generator) {
 		$dir = "$opt->OutputDir/$generator";
 		@mkdir($dir);

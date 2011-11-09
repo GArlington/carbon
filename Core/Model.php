@@ -51,7 +51,7 @@ class Model
 			throw new Exception("No files to read in path: '$sourceDir'");
 
 		foreach( $files as $file ) {
-			print("\nLoading: $file" );
+			print("\n\t$file" );
 
 			if( !$rootnode = simplexml_load_file($file) )
 				throw new Exception("Error reading xml file");
@@ -69,8 +69,9 @@ class Model
 
 		// Apply dynamic model extension plugins...
 		if( $plugins && count($plugins) ) {
+			print("\n\nRunning plugins:");
 			foreach($plugins as $name => $plugin) {
-				print("\nApplying plugin $name");
+				print("\n\t$name");
 				$plugin->Run($this);
 			}
 		}
