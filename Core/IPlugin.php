@@ -2,7 +2,7 @@
 
 
 /**
-*  Dynamic model extension model.
+*  Dynamic model extension plugin.
 */
 interface IPlugin
 {
