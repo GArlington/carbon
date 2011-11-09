@@ -45,10 +45,10 @@ class Model
 	/**
 	*  Recursively loads model from xml package files in given directory.
 	*/
-	public function Load($path)
+	public function Load($sourceDir, $plugins=null)
 	{
-		if( !($files=DirectoryIO::GetFiles($path, "*.xml", true)) )
-			throw new Exception("No files to read in path: '$path'");
+		if( !($files=DirectoryIO::GetFiles($sourceDir, "*.xml", true)) )
+			throw new Exception("No files to read in path: '$sourceDir'");
 
 		foreach( $files as $file ) {
 			print("\nLoading: $file" );
@@ -66,55 +66,29 @@ class Model
 				throw new Exception("Unrecognized xml root node '".$rootnode->GetName()."' in: $file");
 		}
 
+		$this->ConsolidateModel();
+	
+		// Apply dynamic model extension plugins...
+		if( $plugins && count($plugins) ) {
+			foreach($plugins as $plugin)
+				$plugin->Run($this);
+			$this->ConsolidateModel(); // Model must be re-consolidated...
+		}
+		
 		// Sort dictionaries...
 		ksort($this->manifest);
 		ksort($this->packages);
-
-		// Perform operations that require a complete model...
-		$this->SecondPass();
 	}
-
-
+	
 	/**
-	*  Dumps model to console.
+	*  Validates properties' foreign types and implements interfaces that are not.
 	*/
-	public function Debug()
-	{
-		foreach($this->packages as $name=>$pkgobjects) {
-			print("\n_______________________________________________");
-			print("\nPackage $name");
-
-			foreach( $pkgobjects as $object ) {
-				if( $object instanceof Entity ) {
-					print("\n\n\tEntity $object->name");
-					print(" interfaces=[".implode(',', $object->interfaces)."]");
-					print(" tags=[".implode(',', array_keys($object->tags))."]");
-					print(" refby=[".implode(',', array_keys($object->refby))."]");
-					foreach($object->properties as $property) {
-						$type = $property->type . ($property->size?"[$property->size]":'');
-						printf("\n\t\t%-30s%-20s tags=[%s]", $property->name, $type, implode(',', array_keys($property->tags)));
-					}
-				}
-				elseif( $object instanceof Enumeration ) {
-					print("\n\n\tEnumeration $object->name");
-					foreach($object->values as $value)
-						printf("\n\t\t%-30s%-20s tags[%s]", $value->name, $value->value, implode(',', array_keys($value->tags)));
-				}
-			}
-		}
-	}
-
-	/**
-	*  Validates that properties references in index, unique constraints,
-	*  etc are effectively members of said entity.
-	*/
-	private function SecondPass()
+	private function ConsolidateModel()
 	{
 		foreach($this->manifest as $object) {
 			if( $object instanceof Entity )
 				$this->ValidatePropertyType($object);
-
-			$implemented_interfaces = array();
+				
 			foreach($object->interfaces as $interface)
 				$object->ImplementInterface($interface, $this->manifest);
 		}
