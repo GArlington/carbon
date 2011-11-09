@@ -16,7 +16,7 @@ class Package extends XmlElement
 	/**
 	*  Constructor.
 	*/
-	function __construct($node, &$manifest)
+	public function __construct($node, &$manifest)
 	{
 		parent::__construct(null, $node);
 
@@ -33,8 +33,27 @@ class Package extends XmlElement
 				throw new Exception( "$enumeration->name already implemented in ".($manifest[$enumeration->name]->package->name) );
 			$manifest[$enumeration->name] = $enumeration;
 		}
+	}
 
-		ksort($this->entities);
-		ksort($this->enumerations);
+	/**
+	*  Adds entity to package.
+	*/
+	public function AddEntity($entity, &$manifest)
+	{
+		if( isset($manifest[$entity->name]) )
+			throw new Exception("$entity->name already implemented in ".($manifest[$entity->name]->package->name));
+		$manifest[$entity->name] = $entity;
+		$this->entities[] = $entity;
+	}
+
+	/**
+	*  Adds enumeration to package.
+	*/
+	public function AddEnumeration($enumeration, &$manifest)
+	{
+		if( isset($manifest[$enumeration->name]) )
+			throw new Exception("$enumeration->name already implemented in ".($manifest[$enumeration->name]->package->name));
+		$manifest[$enumeration->name] = $enumeration;
+		$this->enumerations[] = $enumeration;
 	}
 }
