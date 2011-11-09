@@ -56,6 +56,18 @@ class Property extends XmlElement
 	}
 
 	/**
+	*  Returns a new property instance from given arguments.
+	*/
+	static function Make($name, $type, $comment="")
+	{
+		$result = new Property(null);
+		$result->name = $name;
+		$result->SetType($type);
+		$result->comment = $comment;
+		return $result;
+	}
+
+	/**
 	*  Returns true if property has a constraint of given name.
 	*/
 	function HasConstraint($name)

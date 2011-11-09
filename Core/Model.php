@@ -66,20 +66,24 @@ class Model
 				throw new Exception("Unrecognized xml root node '".$rootnode->GetName()."' in: $file");
 		}
 
-		$this->ConsolidateModel();
-	
+
 		// Apply dynamic model extension plugins...
 		if( $plugins && count($plugins) ) {
 			foreach($plugins as $plugin)
 				$plugin->Run($this);
-			$this->ConsolidateModel(); // Model must be re-consolidated...
 		}
-		
+
+		$this->ConsolidateModel();
+
 		// Sort dictionaries...
+		foreach($this->packages as $package) {
+			ksort($package->entities);
+			ksort($package->enumerations);
+		}
 		ksort($this->manifest);
 		ksort($this->packages);
 	}
-	
+
 	/**
 	*  Validates properties' foreign types and implements interfaces that are not.
 	*/
@@ -88,7 +92,7 @@ class Model
 		foreach($this->manifest as $object) {
 			if( $object instanceof Entity )
 				$this->ValidatePropertyType($object);
-				
+
 			foreach($object->interfaces as $interface)
 				$object->ImplementInterface($interface, $this->manifest);
 		}

@@ -92,21 +92,12 @@ class Entity extends XmlElement
 	/**
 	*  Adds an enumeration value.
 	*/
-	public function AddProperty($name, $type, $default="", $comment="", $constraint="", $hint="", $labels=null)
+	public function AddProperty($property)
 	{
-		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $name);
-
-		if( isset($this->properties[$name]) )
+		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $property->name);
+		if( isset($this->properties[$property->name]) )
 			throw new Exception("Duplicate property '$fqn'");
-
-		$property = new Property($this->package);
-		$property->name = $name;
-		$property->SetType($type);
-		$property->default = $default;
-		$property->comment = $comment;
-		$property->SetConstraint($constraint);
-		$property->hint = $hint;
-		$property->labels = $labels ? $labels : array();
+		$this->properties[$property->name] = $property;
 	}
 
 	/**
@@ -159,6 +150,7 @@ class Entity extends XmlElement
 				throw new Exception("Property '$fqn.$property->name' already implemented in interface '$foreignpkg.$name'");
 			else
 				$this->properties[$property->name] = $property;
+
 		$this->implementedInterfaces[] = $name;
 
 		// Recurse if this foreign entity also have some interfaces of its own:
