@@ -69,8 +69,10 @@ class Model
 
 		// Apply dynamic model extension plugins...
 		if( $plugins && count($plugins) ) {
-			foreach($plugins as $plugin)
+			foreach($plugins as $name => $plugin) {
+				print("\nApplying plugin $name");
 				$plugin->Run($this);
+			}
 		}
 
 		$this->ConsolidateModel();

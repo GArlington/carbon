@@ -94,7 +94,7 @@ class Entity extends XmlElement
 	*/
 	public function AddProperty($property)
 	{
-		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $property->name);
+		$fqn = sprintf("%s.%s.%s", $this->package->name, $this->name, $property->name);
 		if( isset($this->properties[$property->name]) )
 			throw new Exception("Duplicate property '$fqn'");
 		$this->properties[$property->name] = $property;
@@ -105,7 +105,7 @@ class Entity extends XmlElement
 	*/
 	public function AddUnicityConstraint($constraint)
 	{
-		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $constraint->name);
+		$fqn = sprintf("%s.%s.%s", $this->package->name, $this->name, $constraint->name);
 		if( $this->uniques[$constraint->name] )
 			throw new Exception("Duplicate unicity constraint '$fqn'");
 		$this->uniques[$constraint->name] = $constraint;
@@ -116,7 +116,7 @@ class Entity extends XmlElement
 	*/
 	public function AddIndex($index)
 	{
-		$fqn = sprint("%s.%s.%s", $this->package->name, $this->name, $index->name);
+		$fqn = sprintf("%s.%s.%s", $this->package->name, $this->name, $index->name);
 		if( $this->indexes[$index->name] )
 			throw new Exception("Duplicate index '$fqn'");
 		$this->indexes[$index->name] = $index;
