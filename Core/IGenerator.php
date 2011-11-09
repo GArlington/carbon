@@ -6,5 +6,5 @@
 */
 interface IGenerator
 {
-	function Run($model, $dir);
+	function Run(&$model, $dir);
 }

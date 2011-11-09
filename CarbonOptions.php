@@ -11,7 +11,6 @@ class BuilderOptions extends Options
 	/**
 	*  Sets model definition directory.
 	*  @option   --model -m
-	*  @gradient --gradient -g
 	*/
 	public $ModelDir = "./Model";
 
@@ -20,6 +19,12 @@ class BuilderOptions extends Options
 	*  @option --out -o
 	*/
 	public $OutputDir = "./Out";
+	
+	/**
+	*  Sets model extension plugins directory.
+	*  @option --plugins -p
+	*/
+	public $PluginsDir = "";
 
 	/**
 	*  Sets generator directory.

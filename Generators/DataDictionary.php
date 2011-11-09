@@ -7,7 +7,7 @@ include_once("HtmlHelpers.php");
 
 class DataDictionary implements IGenerator
 {
-	function Run($model, $dir)
+	function Run(&$model, $dir)
 	{
 		@mkdir("$dir");
 		@mkdir("$dir/lib");
