@@ -1,0 +1,9 @@
+glob:.dropbox.attr
+glob:Carbon.ALAIN.abacon.pui
+glob:Carbon.prj
+glob:carbon.tmproj
+glob:desktop.ini
+glob:go
+glob:go.cmd
+glob:.hgignore
+glob:Out/*
