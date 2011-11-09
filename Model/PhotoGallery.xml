@@ -28,20 +28,15 @@
 		<property name="Keywords"    type="text:100" />
 	</entity>
 
-	<entity name="AccessControl" abstract="true" implements="TimeActivation" comment="Access control base." >
-		<property name="Role" type="Role" comment="Role associated with permission." />
-		<property name="Operation" type="text:30" comment="Access controlled operation." />
-	</entity>
-
-	<enumeration name="BaseAccess" >
-		<value name="Read" value="R" />
-		<value name="Write" value="W" />
-		<value name="Create" value="C" />
-		<value name="Delete" value="D" />
+	<enumeration name="BasicOps" >
+		<value name="Read" />
+		<value name="Write" />
+		<value name="Create" />
+		<value name="Delete" />
 	</enumeration>
 
-	<enumeration name="AlbumAccess" implements="BaseAccess" hint="acl(Album)">
-		<value name="Admin" value="A" />
+	<enumeration name="AlbumOps" implements="BasicOps" hint="access(Album)">
+		<value name="Admin" />
 		<value name="Rate" />
 		<value name="Comment" />
 	</enumeration>

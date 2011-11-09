@@ -21,29 +21,32 @@ class AccessControl implements IPlugin
 				continue;
 
 			$fqn = sprintf("%s.%s", $object->package->name, $object->name );
-			$this->ValidateHintReferences($sqf, $hint, $model->manifest);
+			$this->ValidateHintReferences($fqn, $hint, $model->manifest);
 
 			// Create new entity in object's package...
 			$entity = new Entity($object->package);
-			$entity->name = "AC$object->name";
+			$entity->name = "AC_$object->name";
 
 			$entity->AddProperty( Property::Make("Role", "Role") );
 			$entity->AddProperty( Property::Make("Operation", $object->name) );
 
-			foreach($hint->params as $param)
-				$entity->AddProperty( Property::Make($param, $param) );
+			foreach($hint->params as $param) {
+				$p = Property::Make($param, $param);
+				$p->SetHint("scope");
+				$entity->AddProperty($p);
+			}
 
-			$object->package->AddEntity($entity);
+			$object->package->AddEntity($entity, $model->manifest);
 		}
 	}
 
 	/**
 	*  Ensures that hint targets are valid manifest objects.
 	*/
-	private function ValidateHintReferences($sqf, $hint, &$manifest)
+	private function ValidateHintReferences($fqn, $hint, &$manifest)
 	{
 		foreach($hint->params as $param)
 			if( !isset($manifest[$param]) )
-				throw new Exception("Invalid hint target '$param' in $sqf");
+				throw new Exception("Invalid hint target '$param' in $fqn");
 	}
 }

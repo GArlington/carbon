@@ -32,21 +32,20 @@ $opt->Parse($argv);
 	RUN
 ----------------------------------------------------------------------------*/
 
-try {		
+try {
 	$plugins = array();
-	
+
 	// Load dynamic model extension plugins:
 	if( $opt->PluginsDir ) {
 		foreach(DirectoryIO::GetFiles($opt->PluginsDir,"*.php") as $f)
 			include_once($f);
-			
-		print("\n\nLoading model plugins...");		
+
+		print("\n\nLoading model plugins...");
 		foreach(Introspector::GetImplementorsOf("IPlugin") as $plugin) {
-			print("\n\t$plugin");
 			$plugins[$plugin] = new $plugin();
-		}	
+		}
 	}
-		
+
 	// Load model...
 	$model = new Model($opt->Namespace, $opt->License);
 	$model->Load($opt->ModelDir, $plugins);
@@ -87,12 +86,12 @@ print("\n");
 /*----------------------------------------------------------------------------
 	CUSTOM ERROR HANDLER
 ----------------------------------------------------------------------------*/
-function ErrorHandler($errno, $errstr, $errfile, $errline) 
+function ErrorHandler($errno, $errstr, $errfile, $errline)
 {
 	// if @ operator was prepended we ignore the error...
 	if( error_reporting() == 0 )
 		return true;
-		
+
 	switch ($errno) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
