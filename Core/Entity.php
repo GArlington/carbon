@@ -72,12 +72,6 @@ class Entity extends XmlElement
 
 			if( isset($node->index) )
 				$this->ImportNodes($package, $node->index, "Index", $this->indexes);
-
-			foreach($this->uniques as $unique)
-				$this->CheckConstraintTargets($unique);
-
-			foreach($this->indexes as $index)
-				$this->CheckConstraintTargets($index);
 		}
 	}
 
