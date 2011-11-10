@@ -54,9 +54,7 @@ h4 {
 	width:850;
 	font-weight:normal;
 	font-size:inherit;
-	text-transform:uppercase;
 	margin:10px 0;
-	letter-spacing:2px;
 	color:#888;
 }
 /*******************************************************************************
@@ -128,7 +126,7 @@ table.dict td { padding-left:1em; width:100%; vertical-align:text-top; }
 	Hints
 *******************************************************************************/
 span.hint {
-	border:solid 1px #FFCC88;
+	border:solid 1px #FFDD99;
 	background:#FFFFAA;
 	border-radius:5px;
 	padding:2px 6px;
