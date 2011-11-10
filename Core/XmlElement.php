@@ -58,7 +58,7 @@ class XmlElement
 				throw new Exception("Missing $classname name in package $package->name");
 
 			if( strlen($this->name) > MAX_IDENTIFIER_LENGTH )
-				throw new Exception("$classname identifier $this->name too long in package $package->name" );
+				print("\nWARNING: $classname identifier '$this->name' too long in '$package->name'" );
 
 			// Read hints...
 			foreach( Regex::SplitWords(';',$this->ReadAttr("hint")) as $signature ) {

@@ -28,7 +28,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 	jQuery.fn.springy = function (params) {
 		var graph = this.graph = params.graph || new Graph();
 
-		var stiffness = params.stiffness || 400.0;
+		var stiffness = params.stiffness || 300.0;
 		var repulsion = params.repulsion || 300.0;
 		var damping = params.damping || 0.44;
 

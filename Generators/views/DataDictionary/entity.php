@@ -52,7 +52,7 @@
 
 	// calculate canevas size by estimating surface per entity...
 	$n = count($nodes);
-	$canevasSize = (!$entity->abstract && $n>0) ? (250+sqrt($n*3000)) : 0;
+	$canevasSize = (!$entity->abstract && $n>0) ? (300+sqrt($n*10000)) : 0;
  ?>
 <!DOCTYPE html>
 <html>

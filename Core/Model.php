@@ -93,11 +93,14 @@ class Model
 	private function ConsolidateModel()
 	{
 		foreach($this->manifest as $object) {
-			if( $object instanceof Entity )
-				$this->ValidatePropertyType($object);
-
 			foreach($object->interfaces as $interface)
 				$object->ImplementInterface($interface, $this->manifest);
+
+			if( $object instanceof Entity ) {
+				$this->ValidatePropertyType($object);
+				$this->ValidateIndexes($object);
+				$this->ValidateUnicityConstraints($object);
+			}
 		}
 	}
 
@@ -110,14 +113,14 @@ class Model
 			$fqn = sprintf("%s.%s.%s",$object->package->name,$object->name,$property->name);
 
 			if( ($property->type=="text" || $property->type=="binary") && $property->size<1 )
-					Print("\nERROR: Invalid property size for '$fqn'.");
+					print("\nERROR: Invalid property size for '$fqn'.");
 
 			if( $property->type!="text" && $property->type!="binary" && $property->size!=0 )
-					Print("\nERROR: Property size not allowed for '$fqn'.");
+					print("\nERROR: Property size not allowed for '$fqn'.");
 
 			if( !in_array($property->type, Model::$BASE_TYPES) )
 				if( !isset($this->manifest[$property->type]) )
-					Print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
+					print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
 				else {
 					$t = $this->manifest[$property->type];
 
@@ -127,6 +130,32 @@ class Model
 
 					$property->typeref = $t;
 				}
+		}
+	}
+
+	/**
+	*  Validates entity indexes and unique constraints.
+	*/
+	private function ValidateIndexes($object)
+	{
+		foreach($object->indexes as $index) {
+			$fqn = sprintf("%s.%s.%s",$object->package->name,$object->name,$index->name);
+			foreach($index->ref as $name)
+				if( !isset($object->properties[$name]) )
+					print("\nERROR: Unknown property '$name' in index '$fqn'.");
+		}
+	}
+
+	/**
+	*  Validates entity indexes and unique constraints.
+	*/
+	private function ValidateUnicityConstraints($object)
+	{
+		foreach($object->uniques as $unique) {
+			$fqn = sprintf("%s.%s.%s",$object->package->name,$object->name,$unique->name);
+			foreach($unique->ref as $name)
+				if( !isset($object->properties[$name]) )
+					print("\nERROR: Unknown property '$name' in unicity constraint '$fqn'.");
 		}
 	}
 }
