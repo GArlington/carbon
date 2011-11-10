@@ -10,11 +10,10 @@ class AccessControl implements IGenerator
 	function Run(&$model, $dir)
 	{
 		@mkdir("$dir");
-		@mkdir("$dir/lib");
 		@mkdir("$dir/css");
 
 		copy("Generators/views/css/style.css", "$dir/css/style.css");
-	
+
 		$writer = new FileWriter("$dir/index.html");
 		$view = new View("Generators/views/AccessControl/index.php");
 		$viewdata = array(
