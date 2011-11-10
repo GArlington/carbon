@@ -6,4 +6,5 @@ glob:desktop.ini
 glob:go
 glob:go.cmd
 glob:.hgignore
+glob:.DS_Store
 glob:Out/*

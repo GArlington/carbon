@@ -6,7 +6,7 @@ include_once("Core/IPlugin.php");
 *  Implements access control tables from enumerations
 *  that expose the access() hint.
 */
-class AccessControl implements IPlugin
+class AccessControlPlugin implements IPlugin
 {
 	/**
 	*  Execute plugin.

@@ -67,7 +67,7 @@ class Model
 		}
 
 
-		// Apply dynamic model extension plugins...
+		// Apply model plugins...
 		if( $plugins && count($plugins) ) {
 			print("\n\nRunning plugins:");
 			foreach($plugins as $name => $plugin) {
@@ -78,7 +78,7 @@ class Model
 
 		$this->ConsolidateModel();
 
-		// Sort dictionaries...
+		// Sort...
 		foreach($this->packages as $package) {
 			ksort($package->entities);
 			ksort($package->enumerations);
