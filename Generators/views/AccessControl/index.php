@@ -17,14 +17,18 @@
 			<? foreach($package->enumerations as $enumeration): ?>
 				<? if( $hint=$enumeration->GetHint("access") ): ?>
 					<h2><?= $pkgname ?>.<?= $enumeration->name ?></h2>
-					<div class='index'>
-					<h3>Scope: <?= count($hint->params) ? implode(', ', $hint->params) : 'Global' ?></h3>
-					<ul>
+					<?
+					$scope = array();
+					foreach($hint->params as $param)
+						$scope[] = "<span class='hint'>$param</span>";
+					?>
+					<div style='font-size:larger;margin-left:75px;margin-bottom:10px;'>Scope: <?= count($scope) ? implode(' ', $scope) : 'Global' ?></div>
+					<table class='data'>
+						<tr><th>Operation</th><th>Comment</th></tr>
 					<? foreach($enumeration->values as $value): ?>
-						<li><?= $value->name ?></li>
+						<tr><td><?= $value->name ?></td><td><?= $value->comment ?></td></tr>
 					<? endforeach ?>
-					</ul>
-					</div>
+					</table>
 				<? endif ?>
 			<? endforeach ?>					
 		<? endif ?>
