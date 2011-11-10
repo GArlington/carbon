@@ -35,7 +35,7 @@
 		<value name="Delete" />
 	</enumeration>
 
-	<enumeration name="AlbumOps" implements="BasicOps" hint="access(Album)">
+	<enumeration name="AlbumOps" implements="BasicOps" hint="access(Album,Photo)">
 		<value name="Admin" />
 		<value name="Rate" />
 		<value name="Comment" />
