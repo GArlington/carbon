@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<package name="Authentication">
+
+	<enumeration name="UserType" >
+		<value name="Human" comment="Normal human user." />
+		<value name="Virtual"  comment="System user that cannot login but is otherwise treated like a normal user." />
+	</enumeration>
+
+	<entity name="User" implements="Email,Audited, FlagActivation" comment="Defines a user of the system." >
+		<property name="Fullname" type="text:128" constraint="required" comment="Full name, for display purpose only." />
+		<property name="PasswordHash" type="text:256" constraint="required" comment="Password hash. The password itself is not stored." />
+		<property name="ShowEmail" type="logical" default="true" comment="Allows system to display user's email to others." />
+		<property name="DefaultRole" type="Role" comment="User's primary role if he his member of more than one." />
+		<property name="UserType" type="UserType" default="Human" comment="User type." />
+	</entity>
+
+	<entity name="Role" implements="FlagActivation" comment="Defines a security role. Roles are associated to permissions (see ACLs)." >
+		<property name="Name" type="text:128" constraint="required" comment="Role name." />
+
+		<unique name="UkRole" ref="Name" />
+	</entity>
+
+	<entity name="RoleMember" comment="Defines role membership." >
+		<property name="Role" type="Role" constraint="required" />
+		<property name="User" type="User" constraint="required" />
+
+		<unique name="UkRoleMember" ref="Role,User" />
+	</entity>
+
+</package>

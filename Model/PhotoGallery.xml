@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<package name="PhotoGallery">
+
+	<enumeration name="AlbumAudience">
+		<value name="Private" />
+		<value name="MembersOnly" />
+		<value name="Everyone" />
+	</enumeration>
+
+	<entity name="Gallery" implements="FlagActivation" comment="Photo gallery. A gallery can contain an unlimited number of photo albums." >
+		<property name="Title"    type="text:128" constraint="required" />
+		<property name="Keywords" type="text:100" />
+	</entity>
+
+	<entity name="Album" implements="FlagActivation" comment="Photo album." >
+		<property name="Gallery"  type="Gallery" constraint="required" comment="Parent photo gallery." />
+		<property name="Date"     type="time" constraint="required" comment="Creation date." />
+		<property name="Access"   type="AlbumAudience" constraint="required" comment="Intended viewer audience." />
+		<property name="Keywords" type="text:100" />
+	</entity>
+
+	<entity name="Photo" implements="FlagActivation" comment="Photo." >
+		<property name="Album"       type="Album" constraint="required" comment="Parent album." />
+		<property name="Date"        type="time" constraint="required" comment="Creation date." />
+		<property name="Title"       type="text:100" comment="Short title." />
+		<property name="Description" type="text:1K" comment="Description." />
+		<property name="Keywords"    type="text:100" />
+	</entity>
+
+	<enumeration name="BasicOps" >
+		<value name="Read" />
+		<value name="Write" />
+		<value name="Create" />
+		<value name="Delete" />
+	</enumeration>
+
+	<enumeration name="AlbumOps" implements="BasicOps" hint="access(Album,Photo)">
+		<value name="Admin" />
+		<value name="Rate" />
+		<value name="Comment" />
+	</enumeration>
+
+</package>
