@@ -132,7 +132,7 @@ class Model
 
 				$property->typeref = $t;
 				
-				// If referencing an entity, checks that the default value is valid...
+				// If referencing an enumeration, checks that the default value is valid...
 				if( $property->typeref instanceof Enumeration && $property->default )
 					if( !isset($property->typeref->values[$property->default]) )
 						print("\nERROR: Invalid default value '$property->default' for $fqn");
