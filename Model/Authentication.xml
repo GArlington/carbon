@@ -12,7 +12,7 @@
 		<property name="PasswordHash" type="text:256" constraint="required" comment="Password hash. The password itself is not stored." />
 		<property name="ShowEmail" type="logical" default="true" comment="Allows system to display user's email to others." />
 		<property name="DefaultRole" type="Role" comment="User's primary role if he his member of more than one." />
-		<property name="UserType" type="UserType" comment="User type." />
+		<property name="UserType" type="UserType" default="Human" comment="User type." />
 	</entity>
 
 	<entity name="Role" implements="FlagActivation" comment="Defines a security role. Roles are associated to permissions (see ACLs)." >
