@@ -1,7 +1,7 @@
 <?php
 
 
-class Regex
+class QRegex
 {
 	/**
 	*  Split given value delimited string ignoring surounding white spaces.
