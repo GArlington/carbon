@@ -33,7 +33,7 @@ class Enumeration extends XmlElement
 		parent::__construct($package, $node);
 
 		if( $node ) {
-			$this->interfaces = Regex::SplitWords(',', $this->ReadAttr('implements'));
+			$this->interfaces = QRegex::SplitWords(',', $this->ReadAttr('implements'));
 			if( isset($node->value) )
 				$this->ImportNodes($package, $node->value, "EnumerationValue", $this->values);
 			$this->AssertUniqueValue();

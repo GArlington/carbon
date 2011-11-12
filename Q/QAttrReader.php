@@ -5,9 +5,9 @@
 *  Reads reflector object's comments and extracts text
 *  and attributes starting with '@', à la Javadoc.
 */
-class AttribReader
+class QAttrReader
 {
-	private $_text_lines = array();
+	private $_textlines = array();
 	private $_attributes = array();
 
 	/**
@@ -27,7 +27,7 @@ class AttribReader
 				$this->_attributes[substr($name,1)] = trim($value);
 			}
 			else
-				$this->_text_lines[] = $line;
+				$this->_textlines[] = $line;
 		}
 	}
 
@@ -44,7 +44,7 @@ class AttribReader
 	*/
 	public function ToArray()
 	{
-		return $this->_text_lines;
+		return $this->_textlines;
 	}
 
 	/**
@@ -52,6 +52,6 @@ class AttribReader
 	*/
 	public function ToString()
 	{
-		return implode('\n',$this->_text_lines);
+		return implode('\n',$this->_textlines);
 	}
 }

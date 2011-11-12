@@ -1,5 +1,5 @@
 <?php
-include_once("Q/Regex.php");
+include_once("Q/QRegex.php");
 
 
 /**
@@ -41,7 +41,7 @@ class Hint
 	public function __construct($signature)
 	{
 		$this->signature = $signature;
-		$parts = Regex::SplitFunc($signature);
+		$parts = QRegex::SplitFunc($signature);
 		$this->name = array_shift($parts);
 		$this->params = $parts;
 	}

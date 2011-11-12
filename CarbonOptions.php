@@ -1,12 +1,12 @@
 <?php
-include_once("Q/Options.php");
+include_once("Q/QOptions.php");
 
 
 /**
 *  @syntax   php builder.php [options]
 *  @example  php builder.php --m:in -g:xgen2
 */
-class BuilderOptions extends Options
+class BuilderOptions extends QOptions
 {
 	/**
 	*  Sets model definition directory.

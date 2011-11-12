@@ -1,7 +1,7 @@
 <?php
 include_once("XmlElement.php");
 include_once("Constraint.php");
-include_once("Q/Regex.php");
+include_once("Q/QRegex.php");
 
 
 /**
@@ -93,7 +93,7 @@ class Property extends XmlElement
 
 	public function SetConstraint($constraint)
 	{
-		foreach( Regex::SplitWords(';',$constraint) as $signature ) {
+		foreach( QRegex::SplitWords(';',$constraint) as $signature ) {
 			$constraint = new Constraint($signature);
 			$this->constraints[$constraint->name] = $constraint;
 		}

@@ -5,13 +5,13 @@
 *  Loads a php script. The loaded script will have access to passed $viewdata.
 *
 *  Example:
-*	$view = new View();
+*	$view = new QTemplate();
 *	$viewdata = array();
 *       $viewdata[name] = 'Smith';
 *       $viewdata[gender] = Gender::Female;
 *       print( $view->Load('views/person.php', $viewdata) );
 */
-class View
+class QTemplate
 {
 	private $_filename;
 	

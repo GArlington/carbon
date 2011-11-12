@@ -1,7 +1,7 @@
 <?php
 include_once("Magic.php");
-include_once("Q/DirectoryIO.php");
-include_once("Q/Regex.php");
+include_once("Q/QDirectory.php");
+include_once("Q/QRegex.php");
 include_once("Package.php");
 
 
@@ -47,7 +47,7 @@ class Model
 	*/
 	public function Load($sourceDir, $plugins=null)
 	{
-		if( !($files=DirectoryIO::GetFiles($sourceDir, "*.xml", true)) )
+		if( !($files=QDirectory::GetFiles($sourceDir, "*.xml", true)) )
 			throw new Exception("No files to read in path: '$sourceDir'");
 
 		foreach( $files as $file ) {
