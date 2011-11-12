@@ -15,8 +15,8 @@ set_error_handler("ErrorHandler");
 	INCLUDE SUPPORT FILES
 ----------------------------------------------------------------------------*/
 
-include_once("Q/DirectoryIO.php");
-include_once("Q/Introspector.php");
+include_once("Q/QDirectory.php");
+include_once("Q/QReflector.php");
 include_once("Core/Model.php");
 include_once("CarbonOptions.php");
 
@@ -37,10 +37,10 @@ try {
 
 	// Load dynamic model extension plugins:
 	if( $opt->PluginsDir ) {
-		foreach(DirectoryIO::GetFiles($opt->PluginsDir,"*.php") as $f)
+		foreach(QDirectory::GetFiles($opt->PluginsDir,"*.php") as $f)
 			include_once($f);
 
-		foreach(Introspector::GetImplementorsOf("IPlugin") as $plugin) {
+		foreach(QReflector::GetImplementorsOf("IPlugin") as $plugin) {
 			$plugins[$plugin] = new $plugin();
 		}
 	}
@@ -54,12 +54,12 @@ try {
 	@mkdir($opt->OutputDir);
 
 	// Load generators:
-	foreach(DirectoryIO::GetFiles($opt->GeneratorsDir,"*.php") as $f)
+	foreach(QDirectory::GetFiles($opt->GeneratorsDir,"*.php") as $f)
 		include_once($f);
 
 	// Run generators:
 	print("\n\nRunning generators:");
-	foreach(Introspector::GetImplementorsOf("IGenerator") as $generator) {
+	foreach(QReflector::GetImplementorsOf("IGenerator") as $generator) {
 		$dir = "$opt->OutputDir/$generator";
 		@mkdir($dir);
 		print("\n\t$generator");

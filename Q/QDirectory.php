@@ -1,7 +1,7 @@
 <?php
 
 
-class DirectoryIO
+class QDirectory
 {
 	/**
 	*  Returns array of files in given directory.

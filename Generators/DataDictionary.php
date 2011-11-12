@@ -1,7 +1,7 @@
 <?php
 include_once("Core/IGenerator.php");
-include_once("Q/View.php");
-include_once("Q/FileWriter.php");
+include_once("Q/QTemplate.php");
+include_once("Q/QFileWriter.php");
 include_once("HtmlHelpers.php");
 
 
@@ -9,7 +9,6 @@ class DataDictionary implements IGenerator
 {
 	function Run(&$model, $dir)
 	{
-		@mkdir("$dir");
 		@mkdir("$dir/lib");
 		@mkdir("$dir/css");
 
@@ -24,8 +23,8 @@ class DataDictionary implements IGenerator
 			if( ! ($object instanceof Entity || $object instanceof Enumeration) )
 				continue;
 
-			$writer = new FileWriter("$dir/$object->name.html");
-			$view = new View("Generators/views/DataDictionary/".strtolower(get_class($object)).".php");
+			$writer = new QFileWriter("$dir/$object->name.html");
+			$view = new QTemplate("Generators/views/DataDictionary/".strtolower(get_class($object)).".php");
 			$viewdata = array(
 				'object' => $object,
 				'namespace' => $model->namespace,
@@ -38,8 +37,8 @@ class DataDictionary implements IGenerator
 		}
 
 		// Generate index page...
-		$writer = new FileWriter("$dir/index.html");
-		$view = new View("Generators/views/DataDictionary/index.php");
+		$writer = new QFileWriter("$dir/index.html");
+		$view = new QTemplate("Generators/views/DataDictionary/index.php");
 		$viewdata = array(
 			'index' => $model->packages,
 			'namespace' => $model->namespace,

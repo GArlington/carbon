@@ -1,5 +1,5 @@
 <?php
-include_once("Q/Regex.php");
+include_once("Q/QRegex.php");
 include_once("XmlElement.php");
 include_once("Property.php");
 include_once("Unique.php");
@@ -62,7 +62,7 @@ class Entity extends XmlElement
 
 		if( $node ) {
 			$this->abstract = $this->ReadAttr('abstract');
-			$this->interfaces = Regex::SplitWords(',', $this->ReadAttr('implements'));
+			$this->interfaces = QRegex::SplitWords(',', $this->ReadAttr('implements'));
 
 			if( isset($node->property) )
 				$this->ImportNodes($package, $node->property, "Property", $this->properties);

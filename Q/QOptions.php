@@ -1,8 +1,8 @@
 <?php
-include_once("AttribReader.php");
+include_once("QAttrReader.php");
 
 
-class Options
+class QOptions
 {
 	/**
 	*  Parses givens arguments initializing descendant's option
@@ -40,7 +40,7 @@ class Options
 	public function PrintHelp()
 	{
 		$rc = new ReflectionClass($this);
-		$attr = new AttribReader($rc);
+		$attr = new QAttrReader($rc);
 
 		if($syntax = $attr->GetAttrib('syntax'))
 			print("\nsyntax:\n\t$syntax\n");
@@ -51,7 +51,7 @@ class Options
 		print("\nOptions:");
 
 		foreach( $rc->getProperties() as $rp) {
-			$attr = new AttribReader($rp);
+			$attr = new QAttrReader($rp);
 			$opt = $attr->GetAttrib('option');
 			$descr = $attr->ToString();
 			$value = $this->{$rp->getName()};
@@ -67,10 +67,10 @@ class Options
 	public function Dump()
 	{
 		$rc = new ReflectionClass($this);
-		$attr = new AttribReader($rc);
+		$attr = new QAttrReader($rc);
 
 		foreach( $rc->getProperties() as $rp) {
-			$attr = new AttribReader($rp);
+			$attr = new QAttrReader($rp);
 			if( $opt = $attr->GetAttrib('option') ) {
 				$name = $rp->getName();
 				$value = $this->{$rp->getName()};
@@ -89,7 +89,7 @@ class Options
 
 		$rc = new ReflectionClass($this);
 		foreach( $rc->getProperties() as $rp) {
-			$attr = new AttribReader($rp);
+			$attr = new QAttrReader($rp);
 			$aliases = explode(' ',$attr->GetAttrib('option'));
 			if( in_array($optname, $aliases) )
 				return $this->{$rp->getName()} = ($value === NULL ? true : $value);
