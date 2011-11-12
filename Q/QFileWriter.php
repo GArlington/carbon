@@ -1,7 +1,7 @@
 <?php
 
 
-class FileWriter
+class QFileWriter
 {
 	protected $f;
 

@@ -1,5 +1,5 @@
 <?php
-include_once("Q/Regex.php");
+include_once("Q/QRegex.php");
 include_once("XmlElement.php");
 
 
@@ -25,6 +25,6 @@ class Unique extends XmlElement
 	*/
 	public function SetReferences($refs)
 	{
-		$this->ref = Regex::SplitWords(',', $refs);
+		$this->ref = QRegex::SplitWords(',', $refs);
 	}
 }
