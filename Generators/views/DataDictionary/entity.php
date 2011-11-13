@@ -49,10 +49,6 @@
 			$nodes[$ref->name] = "{label:'$ref->name', color:'#888'}";
 		$edges[] = array($ref->name, $entityName);
 	}
-
-	// calculate canevas size by estimating surface per entity...
-	$n = count($nodes);
-	$canevasSize = (!$entity->abstract && $n>0) ? (300+sqrt($n*10000)) : 0;
  ?>
 <!DOCTYPE html>
 <html>
@@ -92,7 +88,7 @@
 			$constraints = array();
 			foreach($property->constraints as $constraint)
 				$constraints[] = $constraint->signature;
-			$constraints = implode(' ', $constraints);
+			$constraints = implode('<br>', $constraints);
 
 			// CSS Class:
 			$classes = array();
@@ -142,8 +138,8 @@
 
 
 
-	<? if( $canevasSize ): ?>
-		<canvas class='relationships' id="model" width="<?= $canevasSize ?>" height="<?= $canevasSize ?>">
+	<? if( count($nodes) ): ?>
+		<canvas class='relationships' id="model" width="850" height="500">
 		</canvas>
 		<script>
 			var graph = new Graph();

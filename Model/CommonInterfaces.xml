@@ -7,7 +7,7 @@
 	</entity>
 
 	<entity name="FlagActivation" abstract="true" comment="Resource can be activated/deactivated by a flag." >
-		<property name="Active" type="logical" comment="True if resource is available." />
+		<property name="Active" type="logical" default='true' comment="True if resource is available." />
 	</entity>
 
 	<entity name="TimeActivation" abstract="true" comment="Resource can be activated/deactivated based on time." >
