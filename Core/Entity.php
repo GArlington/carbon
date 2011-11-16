@@ -61,7 +61,7 @@ class Entity extends XmlElement
 		parent::__construct($package, $node);
 
 		if( $node ) {
-			$this->abstract = $this->ReadAttr('abstract');
+			$this->abstract = $this->ReadAttr('abstract')=='true';
 			$this->interfaces = QRegex::SplitWords(',', $this->ReadAttr('implements'));
 
 			if( isset($node->property) )
