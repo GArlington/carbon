@@ -1,5 +1,5 @@
 <?php
-include_once("Q/QRegex.php");
+include_once("Q/Regex.php");
 include_once("Hint.php");
 
 
@@ -61,11 +61,12 @@ class XmlElement
 				print("\nWARNING: $classname identifier '$this->name' too long in '$package->name'" );
 
 			// Read hints...
-			foreach( QRegex::SplitWords(';',$this->ReadAttr("hint")) as $signature ) {
+			foreach( Regex::SplitWords(';',$this->ReadAttr("hint")) as $signature ) {
 				if( trim($signature) )
 					$this->SetHint($signature);
 			}
 
+			$this->SetLabel(DEFAULT_LANG, $this->name);
 			if( $node->label )
 				foreach( $node->label as $label ) {
 					$lang = isset($label['lang']) ? (string)$label['lang'] : DEFAULT_LANG;
