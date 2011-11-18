@@ -11,7 +11,7 @@ class PhpActiveReport implements IGenerator
 	{
 		foreach($model->manifest as $object) {
 			$writer = new QFileWriter("$dir/$object->name.php");
-			$view = new QTemplate("Generators/views/PhpActiveRecord/".get_class($object).".php");
+			$view = new QTemplate("Generators/Templates/PhpActiveRecord/".get_class($object).".php");
 
 			if( $object instanceof Entity )
 				$assoc = $this->GetEntityDefaults($object);
