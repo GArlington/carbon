@@ -2,27 +2,27 @@
 
 
 /**
-*  Loads a php script. The loaded script will have access to passed $viewdata.
+*  Loads a php script. The loaded script will have access to passed $data.
 *
 *  Example:
-*	$view = new QTemplate();
-*	$viewdata = array();
-*       $viewdata[name] = 'Smith';
-*       $viewdata[gender] = Gender::Female;
-*       print( $view->Load('views/person.php', $viewdata) );
+*	$template = new QTemplate();
+*	$data = array();
+*       $data[name] = 'Smith';
+*       $data[gender] = Gender::Female;
+*       print( $template->Load('views/person.php', $data) );
 */
 class QTemplate
 {
 	private $_filename;
-	
-	
+
+
 	public function __construct($filename)
 	{
 		$this->filename = $filename;
 	}
-	
-	
-	public function Load($viewdata)
+
+
+	public function Load($data)
 	{
 		@ob_end_clean();
 		ob_start();

@@ -12,26 +12,26 @@ class PhpActiveReport implements IGenerator
 		foreach($model->manifest as $object) {
 			$writer = new QFileWriter("$dir/$object->name.php");
 			$view = new QTemplate("Generators/views/PhpActiveRecord/".get_class($object).".php");
-			
+
 			if( $object instanceof Entity )
 				$assoc = $this->GetEntityDefaults($object);
 			else
 				$assoc = $this->GetEnumerationValues($object);
-			$viewdata = array(
+			$data = array(
 				'object' => $object,
 				'namespace' => $model->namespace,
 				'license' => $model->license,
 				'assoc' => $assoc
 			);
 			if( $object instanceof Entity )
-				$viewdata['includes'] = $this->GetRequiredFilenames($object);
-			
-			$content = $view->Load($viewdata);
-			$writer->Write("<?php\n$content");	
+				$data['includes'] = $this->GetRequiredFilenames($object);
+
+			$content = $view->Load($data);
+			$writer->Write("<?php\n$content");
 			$writer->Close();
 		}
 	}
-	
+
 	/**
 	*  Returns entity's required files (for complex types properties).
 	*/
@@ -43,7 +43,7 @@ class PhpActiveReport implements IGenerator
 				$result[] = $property->type;
 		return $result;
 	}
-	
+
 	/**
 	*  Returns entity's default values indexed by property name.
 	*/
@@ -59,16 +59,16 @@ class PhpActiveReport implements IGenerator
 			elseif($property->type == 'real')
 				$default = (double)$default;
 			elseif($property->type == 'logical')
-				$default = $default=='true' ? 'true' : 'false';	
+				$default = $default=='true' ? 'true' : 'false';
 			elseif($property->type == 'binary')
 				$default = "''";
 			else
-				$default = "0";			
+				$default = "0";
 			$result[$property->name] = $default;
 		}
 		return $result;
-	}	
-	
+	}
+
 	/**
 	*  Returns enumeration values' effective value (not name)
 	*/
@@ -79,6 +79,6 @@ class PhpActiveReport implements IGenerator
 			$result[$value->name] = $value->value;
 		return $result;
 	}
-	
-	
+
+
 }
