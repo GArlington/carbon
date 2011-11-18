@@ -153,9 +153,7 @@
 			<?  endforeach ?>
 
 			jQuery(function(){
-				var springy = jQuery('#model').springy({
-					graph: graph
-				});
+				var springy = jQuery('#model').springy({graph:graph});
 			});
 		</script>
 	<?  endif ?>
