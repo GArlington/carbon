@@ -22,7 +22,7 @@ include_once('<?= $include ?>.php');
 class <?= $entity->name ?> extends ActiveRecord
 {
 <? foreach($entity->properties as $property): ?>
-	const <?= str_pad($property->name,$n) ?> = <?= str_pad("'$property->name';",$n+3) ?> // <?= $property->rawtype ?> -- <?= "$property->comment\n" ?>
+	const <?= str_pad($property->name,$n) ?> = <?= str_pad("'$property->name';",$n+3) ?> // <?= $property->rawtype ?><?= ($property->comment?" ($property->comment)":'') . "\n" ?>
 <? endforeach ?>
 	
 	/**
