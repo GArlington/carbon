@@ -11,16 +11,16 @@ class AccessControl implements IGenerator
 	{
 		@mkdir("$dir/css");
 
-		copy("Generators/views/css/style.css", "$dir/css/style.css");
+		copy("Generators/Templates/css/style.css", "$dir/css/style.css");
 
 		$writer = new QFileWriter("$dir/index.html");
-		$view = new QTemplate("Generators/views/AccessControl/index.php");
-		$viewdata = array(
+		$view = new QTemplate("Generators/Templates/AccessControl/index.php");
+		$data = array(
 			'index' => $model->packages,
 			'namespace' => $model->namespace,
 			'license' => $model->license
 		);
-		$content = $view->Load($viewdata);
+		$content = $view->Load($data);
 		$writer->Write($content);
 		$writer->Close();
 	}

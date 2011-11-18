@@ -1,7 +1,7 @@
 <?php
-	$namespace = $viewdata['namespace'];
-	$license   = $viewdata['license'];
-	$packages  = $viewdata['index'];
+	$namespace = $data['namespace'];
+	$license   = $data['license'];
+	$packages  = $data['index'];
  ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +30,7 @@
 					<? endforeach ?>
 					</table>
 				<? endif ?>
-			<? endforeach ?>					
+			<? endforeach ?>
 		<? endif ?>
 	<? endforeach ?>
 

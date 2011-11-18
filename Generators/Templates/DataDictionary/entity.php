@@ -1,7 +1,7 @@
 <?php
-	$namespace = $viewdata['namespace'];
-	$license   = $viewdata['license'];
-	$entity    = $viewdata['object'];
+	$namespace = $data['namespace'];
+	$license   = $data['license'];
+	$entity    = $data['object'];
 
 	$entityName = $entity->name;
 	$pkgName   = $entity->package->name;

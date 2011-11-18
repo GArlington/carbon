@@ -1,10 +1,10 @@
 <?
-	$entity = $viewdata['object'];
-	$namespace = $viewdata['namespace'];
-	$license = $viewdata['license'];
-	$defaults = $viewdata['assoc'];
-	$includes = $viewdata['includes'];
-	
+	$entity = $data['object'];
+	$namespace = $data['namespace'];
+	$license = $data['license'];
+	$defaults = $data['assoc'];
+	$includes = $data['includes'];
+
 	// Find longest property name in entity (for cosmetic purpose)
 	$n = $maxlen = max(array_map('strlen', array_keys($entity->properties)));
 ?>
@@ -24,7 +24,7 @@ class <?= $entity->name ?> extends ActiveRecord
 <? foreach($entity->properties as $property): ?>
 	const <?= str_pad($property->name,$n) ?> = <?= str_pad("'$property->name';",$n+3) ?> // <?= $property->rawtype ?><?= ($property->comment?" ($property->comment)":'') . "\n" ?>
 <? endforeach ?>
-	
+
 	/**
 	*  Constructor.
 	*/

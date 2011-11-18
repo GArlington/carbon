@@ -1,7 +1,7 @@
 <?php
-	$namespace = $viewdata['namespace'];
-	$license = $viewdata['license'];
-	$enumeration = $viewdata['object'];
+	$namespace = $data['namespace'];
+	$license = $data['license'];
+	$enumeration = $data['object'];
 	$enumerationName  = $enumeration->name;
 	$pkgName = $enumeration->package->name;
 	$pkgLink = "<a href='index.html#$pkgName'>$pkgName</a>";

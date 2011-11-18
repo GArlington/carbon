@@ -25,12 +25,12 @@ class DataDictionary implements IGenerator
 
 			$writer = new QFileWriter("$dir/$object->name.html");
 			$view = new QTemplate("Generators/views/DataDictionary/".strtolower(get_class($object)).".php");
-			$viewdata = array(
+			$data = array(
 				'object' => $object,
 				'namespace' => $model->namespace,
 				'license' => $model->license
 			);
-			$content = $view->Load($viewdata);
+			$content = $view->Load($data);
 
 			$writer->Write($content);
 			$writer->Close();
@@ -39,12 +39,12 @@ class DataDictionary implements IGenerator
 		// Generate index page...
 		$writer = new QFileWriter("$dir/index.html");
 		$view = new QTemplate("Generators/views/DataDictionary/index.php");
-		$viewdata = array(
+		$data = array(
 			'index' => $model->packages,
 			'namespace' => $model->namespace,
 			'license' => $model->license
 		);
-		$content = $view->Load($viewdata);
+		$content = $view->Load($data);
 		$writer->Write($content);
 		$writer->Close();
 	}

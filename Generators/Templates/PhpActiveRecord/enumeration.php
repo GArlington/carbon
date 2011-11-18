@@ -1,8 +1,8 @@
 <?
-	$enum = $viewdata['object'];
-	$namespace = $viewdata['namespace'];
-	$license = $viewdata['license'];
-	$values = $viewdata['assoc'];
+	$enum = $data['object'];
+	$namespace = $data['namespace'];
+	$license = $data['license'];
+	$values = $data['assoc'];
 
 	// Find longest property name in entity (for cosmetic purpose)
 	$n = $maxlen = max(array_map('strlen', array_keys($enum->values)));
