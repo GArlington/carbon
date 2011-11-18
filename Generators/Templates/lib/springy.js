@@ -335,7 +335,7 @@ Layout.ForceDirected.prototype.applyHookesLaw = function () {
 Layout.ForceDirected.prototype.attractToCentre = function () {
 	this.eachNode(function (node, point) {
 		var direction = point.p.multiply(-1.0);
-		point.applyForce(direction.multiply(this.repulsion / 50.0));
+		point.applyForce(direction.multiply(this.repulsion / 200.0));
 	});
 };
 
@@ -386,8 +386,8 @@ Layout.ForceDirected.prototype.start = function (interval, render, done) {
 		t.applyCoulombsLaw();
 		t.applyHookesLaw();
 		t.attractToCentre();
-		t.updateVelocity(0.03);
-		t.updatePosition(0.03);
+		t.updateVelocity(0.05);
+		t.updatePosition(0.05);
 
 		if (typeof (render) !== 'undefined')
 			render();
@@ -438,7 +438,7 @@ Layout.ForceDirected.prototype.getBoundingBox = function () {
 		}
 	});
 
-	var padding = topright.subtract(bottomleft).multiply(0.07); // ~5% padding
+	var padding = topright.subtract(bottomleft).multiply(0.15); // ~5% padding
 
 	return { bottomleft: bottomleft.subtract(padding), topright: topright.add(padding) };
 };
