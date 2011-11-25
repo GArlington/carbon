@@ -86,19 +86,21 @@ class Enumeration extends XmlElement
 		}
 
 		// Create reference to foreign component:
-		$foreign = $manifest[$name];
-		$foreignpkg = $foreign->package->name;
+		$fenum = $manifest[$name];
+		$fpkg = $fenum->package->name;
 
 		// Import foreign properties:
-		foreach($foreign->values as $value)
+		foreach($fenum->values as $value)
 			if( isset($this->values[$value->name]) && !$recursing )
-				throw new Exception("Enumeration value '$fqn.$value->name' already implemented in interface '$foreignpkg.$name'");
-			else
+				throw new Exception("Enumeration value '$fqn.$value->name' already implemented in interface '$fpkg.$name'");
+			else {
 				$this->values[$value->name] = $value;
+				$this->values[$value->name]->origin = $fenum;
+			}
 		$this->implementedInterfaces[] = $name;
 
 		// Recurse if this foreign entity also have some interfaces of its own:
-		foreach($foreign->interfaces as $subinterface)
+		foreach($fenum->interfaces as $subinterface)
 			$this->ImplementObjectInterface($subinterface, $manifest, true);
 	}
 

@@ -8,6 +8,7 @@ include_once("XmlElement.php");
 class EnumerationValue extends XmlElement
 {
 	public $value;
+	public $origin;
 
 	/*
 	*  Constructor.

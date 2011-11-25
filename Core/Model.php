@@ -118,25 +118,18 @@ class Model
 			if( $property->type!="text" && $property->type!="binary" && $property->size!=0 )
 					print("\nERROR: Property size not allowed for '$fqn'.");
 
-			if( in_array($property->type, Model::$BASE_TYPES) )
-				continue;
-				
-			if( !isset($this->manifest[$property->type]) )	
-				print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
-			else {
-				$t = $this->manifest[$property->type];
+			if( !in_array($property->type, Model::$BASE_TYPES) )
+				if( !isset($this->manifest[$property->type]) )
+					print("\nERROR: Unknown property type ($property->type) for '$fqn'.");
+				else {
+					$t = $this->manifest[$property->type];
 
-				// Also update foreign reference...
-				if( $t && $t instanceof Entity && !isset($t->refby[$object->name]) )
-					$t->refby[$object->name] = $object;
+					// Also update foreign reference...
+					if( $t && $t instanceof Entity && !isset($t->refby[$object->name]) )
+						$t->refby[$object->name] = $object;
 
-				$property->typeref = $t;
-				
-				// If referencing an enumeration, checks that the default value is valid...
-				if( $property->typeref instanceof Enumeration && $property->default )
-					if( !isset($property->typeref->values[$property->default]) )
-						print("\nERROR: Invalid default value '$property->default' for $fqn");
-			}
+					$property->typeref = $t;
+				}
 		}
 	}
 

@@ -127,8 +127,8 @@ table.dict td { padding-left:1em; width:100%; vertical-align:text-top; }
 	Hints
 *******************************************************************************/
 span.hint {
-	border:solid 1px #FFDD99;
-	background:#FFFFAA;
+	border:solid 1px #FD9;
+	background:#FFA;
 	border-radius:5px;
 	padding:2px 6px;
 }
@@ -139,4 +139,12 @@ span.hint {
 span.highlight {
 	background:lightpink;
 	font-weight:bold;
+}
+
+span.autonote {
+	border:solid 1px #9D9;
+	background:#DFA;
+	border-radius:5px;
+	padding:2px 6px;
+	font-style: italic;
 }

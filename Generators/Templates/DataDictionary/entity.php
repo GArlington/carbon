@@ -2,6 +2,7 @@
 	$namespace = $data['namespace'];
 	$license   = $data['license'];
 	$entity    = $data['object'];
+	$helper    = $data['helper'];
 
 	$entityName = $entity->name;
 	$pkgName   = $entity->package->name;
@@ -49,6 +50,10 @@
 			$nodes[$ref->name] = "{label:'$ref->name', color:'#888'}";
 		$edges[] = array($ref->name, $entityName);
 	}
+
+	// calculate canevas size by estimating surface per entity...
+	$n = count($nodes);
+	$canevasSize = (!$entity->abstract && $n>0) ? (300+sqrt($n*10000)) : 0;
  ?>
 <!DOCTYPE html>
 <html>
@@ -62,7 +67,7 @@
 <body>
 	<? $class=$entity->abstract?" class='abstract'":'' ?>
 	<h1<?= $class ?>><?= $pkgLink ?>.<?= $entityName ?></h1>
-	<p><?= Highlight($entity->comment) ?></p>
+	<p><?= $helper->Highlight($entity->comment) ?></p>
 
 	<?if( $interfaces ): ?>
 		<h2>Interfaces</h2>
@@ -88,7 +93,7 @@
 			$constraints = array();
 			foreach($property->constraints as $constraint)
 				$constraints[] = $constraint->signature;
-			$constraints = implode('<br>', $constraints);
+			$constraints = implode(' ', $constraints);
 
 			// CSS Class:
 			$classes = array();
@@ -100,6 +105,12 @@
 			foreach($property->hints as $hint)
 				$propHints[] = "<span class='hint'>$hint->signature</span>";
 			$propHints = count($propHints) ? implode(' ', $propHints) : '';
+			$xcomment = "";
+			if( $property->origin && $property->origin->name!=$entity->name ) {
+				$oname = $property->origin->name;
+				$opkg = $property->origin->package->name;
+				$xcomment = " <span class='autonote'>$oname</span>";
+			}
 		 ?>
 			<tr>
 				<td class='<?= implode(' ',$classes) ?>'><?= $property->name ?></td>
@@ -107,7 +118,7 @@
 				<td><?= $property->default ?></td>
 				<td><?= $constraints ?></td>
 				<td><?= $propHints ?></td>
-				<td><?= Highlight($property->comment) ?></td>
+				<td><?= $helper->Highlight($property->comment).$xcomment ?></td>
 			</tr>
 		<?  endforeach ?>
 	</table>
@@ -138,8 +149,8 @@
 
 
 
-	<? if( count($nodes) ): ?>
-		<canvas class='relationships' id="model" width="850" height="500">
+	<? if( $canevasSize ): ?>
+		<canvas class='relationships' id="model" width="<?= $canevasSize ?>" height="<?= $canevasSize ?>">
 		</canvas>
 		<script>
 			var graph = new Graph();
@@ -153,7 +164,9 @@
 			<?  endforeach ?>
 
 			jQuery(function(){
-				var springy = jQuery('#model').springy({graph:graph});
+				var springy = jQuery('#model').springy({
+					graph: graph
+				});
 			});
 		</script>
 	<?  endif ?>
