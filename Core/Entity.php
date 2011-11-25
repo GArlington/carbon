@@ -142,8 +142,10 @@ class Entity extends XmlElement
 		foreach($foreign->properties as $property)
 			if( isset($this->properties[$property->name]) && !$recursing )
 				throw new Exception("Property '$fqn.$property->name' already implemented in interface '$foreignpkg.$name'");
-			else
+			else {
 				$this->properties[$property->name] = $property;
+				$this->properties[$property->name]->origin = $foreign;
+			}
 
 		$this->implementedInterfaces[] = $name;
 

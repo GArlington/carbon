@@ -40,6 +40,11 @@ class Property extends XmlElement
 	*/
 	public $typeref;
 
+	/**
+	*  Reference to source entity if inherited.
+	*/
+	public $origin;
+
 
 	/*
 	*  Constructor.
