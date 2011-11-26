@@ -50,7 +50,7 @@
 			if( $value->origin && $value->origin->name!=$enumeration->name ) {
 				$oname = $value->origin->name;
 				$opkg = $value->origin->package->name;
-				$xcomment = " <span class='autonote'>$oname</span>";
+				$xcomment = " <span class='autonote'>From $oname</span>";
 			}
 		 ?>
 			<tr>
