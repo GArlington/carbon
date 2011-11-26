@@ -9,22 +9,22 @@
 	</enumeration>
 
 	<entity name="Blog" >
-		<property name="Name"   type="text:60" constraint="required" />
-		<property name="Author" type="User" constraint="required" />
+		<property name="Name"   type="text:60" constraint="Required" />
+		<property name="Author" type="User" constraint="Required" />
 	</entity>
 
 	<entity name="BlogEntry" implements="FlagActivation,TimeActivation" comment="Blog entry." >
-		<property name="Blog"     type="Blog"           constraint="required" />
-		<property name="Title"    type="text:128"       constraint="required" />
-		<property name="Date"     type="time"           constraint="required" />
-		<property name="Content"  type="text:10K"       constraint="required" />
-		<property name="State"    type="BlogEntryState" constraint="required" />
+		<property name="Blog"     type="Blog"           constraint="Required" />
+		<property name="Title"    type="text:128"       constraint="Required" />
+		<property name="Date"     type="time"           constraint="Required" />
+		<property name="Content"  type="text:10K"       constraint="Required" />
+		<property name="State"    type="BlogEntryState" constraint="Required" />
 		<property name="Keywords" type="text:100" />
 	</entity>
 
 	<entity name="BlogComment" implements="FlagActivation,Email" comment="Blog entry." >
-		<property name="Date"    type="time"    constraint="required" />
-		<property name="Content" type="text:1K" constraint="required" />
+		<property name="Date"    type="time"    constraint="Required" />
+		<property name="Content" type="text:1K" constraint="Required" />
 	</entity>
 
 	<entity name="BlogConfig" hint="config" comment="Per blog configuration" >

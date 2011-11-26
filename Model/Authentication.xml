@@ -8,22 +8,22 @@
 	</enumeration>
 
 	<entity name="User" implements="Email,Audited, FlagActivation" comment="Defines a user of the system." >
-		<property name="Fullname" type="text:128" constraint="required" comment="Full name, for display purpose only." />
-		<property name="PasswordHash" type="text:256" constraint="required" comment="Password hash. The password itself is not stored." />
+		<property name="Fullname" type="text:128" constraint="Required" comment="Full name, for display purpose only." />
+		<property name="PasswordHash" type="text:256" constraint="Required" comment="Password hash. The password itself is not stored." />
 		<property name="ShowEmail" type="logical" default="true" comment="Allows system to display user's email to others." />
 		<property name="DefaultRole" type="Role" comment="User's primary role if he his member of more than one." />
 		<property name="UserType" type="UserType" default="Human" comment="User type." />
 	</entity>
 
 	<entity name="Role" implements="FlagActivation" comment="Defines a security role. Roles are associated to permissions (see ACLs)." >
-		<property name="Name" type="text:128" constraint="required" comment="Role name." />
+		<property name="Name" type="text:128" constraint="Required" comment="Role name." />
 
 		<unique name="UkRole" ref="Name" />
 	</entity>
 
 	<entity name="RoleMember" comment="Defines role membership." >
-		<property name="Role" type="Role" constraint="required" />
-		<property name="User" type="User" constraint="required" />
+		<property name="Role" type="Role" constraint="Required" />
+		<property name="User" type="User" constraint="Required" />
 
 		<unique name="UkRoleMember" ref="Role,User" />
 	</entity>

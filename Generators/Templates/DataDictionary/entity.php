@@ -93,7 +93,7 @@
 			$constraints = array();
 			foreach($property->constraints as $constraint)
 				$constraints[] = $constraint->signature;
-			$constraints = implode(' ', $constraints);
+			$constraints = implode('<br>', $constraints);
 
 			// CSS Class:
 			$classes = array();
@@ -109,7 +109,7 @@
 			if( $property->origin && $property->origin->name!=$entity->name ) {
 				$oname = $property->origin->name;
 				$opkg = $property->origin->package->name;
-				$xcomment = " <span class='autonote'>$oname</span>";
+				$xcomment = " <span class='autonote'>From $oname</span>";
 			}
 		 ?>
 			<tr>

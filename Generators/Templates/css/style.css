@@ -147,4 +147,5 @@ span.autonote {
 	border-radius:5px;
 	padding:2px 6px;
 	font-style: italic;
+	white-space:nowrap;
 }
