@@ -22,16 +22,16 @@ include_once('<?= $include ?>.php');
 class <?= $entity->name ?> extends ActiveRecord
 {
 <? foreach($entity->properties as $property): ?>
-	const <?= str_pad($property->name,$n) ?> = <?= str_pad("'$property->name';",$n+3) ?> // <?= $property->rawtype ?><?= ($property->comment?" ($property->comment)":'') . "\n" ?>
+	const <?= str_pad($property->name,$n) ?> = <?= str_pad("'$property->name';",$n+3) ?> // type <?= $property->rawtype ?><?= ($property->comment?" ($property->comment)":'') . "\n" ?>
 <? endforeach ?>
 
 	/**
 	*  Constructor.
 	*/
-	public function __construct($source)
+	public function __construct($source=null)
 	{
 <? foreach($entity->properties as $property): ?>
-		$this->SetDefault(self::<?= $property->name ?>, <?= $defaults[$property->name] ?> );
+		$this->SetDefault(<?= $entity->name ?>::<?= $property->name ?>, <?= $defaults[$property->name] ?> );
 <? endforeach ?>
 
 		parent::__construct($source);
