@@ -5,7 +5,7 @@ include_once("Core/IGenerator.php");
 /**
 *  Generates PHP active record objects.
 */
-class PhpActiveReport implements IGenerator
+class PhpActiveRecord implements IGenerator
 {
 	function Run(&$model, $dir)
 	{
