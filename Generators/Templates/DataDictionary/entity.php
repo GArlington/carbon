@@ -50,10 +50,6 @@
 			$nodes[$ref->name] = "{label:'$ref->name', color:'#888'}";
 		$edges[] = array($ref->name, $entityName);
 	}
-
-	// calculate canevas size by estimating surface per entity...
-	$n = count($nodes);
-	$canevasSize = (!$entity->abstract && $n>0) ? (300+sqrt($n*10000)) : 0;
  ?>
 <!DOCTYPE html>
 <html>
@@ -146,31 +142,6 @@
 		<?  endforeach ?>
 	</table>
 	<?endif ?>
-
-
-
-	<? if( $canevasSize ): ?>
-		<canvas class='relationships' id="model" width="<?= $canevasSize ?>" height="<?= $canevasSize ?>">
-		</canvas>
-		<script>
-			var graph = new Graph();
-
-			<?foreach($nodes as $name=>$attr): ?>
-				var <?= $name ?> = graph.newNode(<?= $attr ?>);
-			<?  endforeach ?>
-
-			<?foreach($edges as $node): ?>
-				graph.newEdge(<?= $node[0] ?>, <?= $node[1] ?>);
-			<?  endforeach ?>
-
-			jQuery(function(){
-				var springy = jQuery('#model').springy({
-					graph: graph
-				});
-			});
-		</script>
-	<?  endif ?>
-
 
 	<div class='license'><?= $license ?></div>
 </body>
